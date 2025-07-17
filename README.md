@@ -8,13 +8,10 @@ A cross-platform mobile app designed for **Neko and Kopi** cafe to streamline an
 
 ## 👥 Team Code4Change
 
-- **Sashrika Erajini**
+- **Sashrika Erajini** - 
 - **Lochini Weerasinghe** 
 - **Nimnadi Palihena** 
 - **Gayashi Ramanayake** 
-
-> 🚧 Roles may shift based on workload during the project lifecycle.
-
 ---
 
 ## 📌 Project Overview
