@@ -1,15 +1,108 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
-export default function ProfileScreen() {
+export default function DailyUsageScreen() {
+  const [usageData] = useState([
+    {
+      id: '1',
+      item: 'Coffee Beans',
+      amount: '-0.5 kg',
+      date: 'Jan 27 at 9:30 AM',
+      note: 'Morning batch',
+    },
+    {
+      id: '2',
+      item: 'Milk',
+      amount: '-2.1 L',
+      date: 'Jan 27 at 10:15 AM',
+      note: 'Cappuccinos and lattes',
+    },
+    {
+      id: '3',
+      item: 'Sugar',
+      amount: '-150 g',
+      date: 'Jan 27 at 11:00 AM',
+      note: '',
+    },
+  ]);
+
+  const renderItem = ({ item }) => (
+    <View style={styles.usageCard}>
+      <View style={styles.usageRow}>
+        <Text style={styles.usageItem}>{item.item}</Text>
+        <Text style={styles.usageAmount}>{item.amount}</Text>
+      </View>
+      <Text style={styles.usageDate}>{item.date}</Text>
+      {item.note ? <Text style={styles.usageNote}>{item.note}</Text> : null}
+    </View>
+  );
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>This is the Profile Screen</Text>
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Daily Usage</Text>
+        <TouchableOpacity style={styles.addButton}>
+          <Ionicons name="add" size={22} color="#fff" />
+        </TouchableOpacity>
+      </View>
+      <Text style={styles.subtitle}>Track ingredient consumption</Text>
+
+      {/* Stats Row */}
+      <View style={styles.statsRow}>
+        <View style={styles.statCard}>
+          <Ionicons name="document-text-outline" size={22} color="#f57c00" />
+          <Text style={styles.statValue}>0</Text>
+          <Text style={styles.statLabel}>Entries Today</Text>
+        </View>
+        <View style={styles.statCard}>
+          <Ionicons name="calendar-outline" size={22} color="#388e3c" />
+          <Text style={styles.statValue}>Jul 26</Text>
+          <Text style={styles.statLabel}>Current Date</Text>
+        </View>
+        <View style={styles.statCard}>
+          <Ionicons name="cube-outline" size={22} color="#fbc02d" />
+          <Text style={styles.statValue}>5</Text>
+          <Text style={styles.statLabel}>Available Items</Text>
+        </View>
+      </View>
+
+      {/* Recent Usage Section */}
+      <Text style={styles.sectionTitle}>Recent Usage Entries</Text>
+
+      <FlatList
+        data={usageData}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={{ paddingBottom: 20 }}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  text: { fontSize: 20 }
+  container: { flex: 1, backgroundColor: '#fff', padding: 16 },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  headerTitle: { fontSize: 20, fontWeight: 'bold' },
+  subtitle: { fontSize: 13, color: '#777', marginBottom: 12 },
+  addButton: { backgroundColor: '#333', borderRadius: 20, padding: 6 },
+  statsRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 16 },
+  statCard: { alignItems: 'center', flex: 1 },
+  statValue: { fontSize: 16, fontWeight: 'bold', marginTop: 4 },
+  statLabel: { fontSize: 12, color: '#777', textAlign: 'center' },
+  sectionTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 10 },
+  usageCard: {
+    backgroundColor: '#fafafa',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#eee',
+  },
+  usageRow: { flexDirection: 'row', justifyContent: 'space-between' },
+  usageItem: { fontSize: 15, fontWeight: '600' },
+  usageAmount: { fontSize: 15, fontWeight: '600', color: 'red' },
+  usageDate: { fontSize: 12, color: '#777', marginTop: 4 },
+  usageNote: { fontSize: 13, color: '#444', fontStyle: 'italic', marginTop: 4 },
 });
