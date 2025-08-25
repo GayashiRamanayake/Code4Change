@@ -1,108 +1,180 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Switch,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
-export default function DailyUsageScreen() {
-  const [usageData] = useState([
-    {
-      id: '1',
-      item: 'Coffee Beans',
-      amount: '-0.5 kg',
-      date: 'Jan 27 at 9:30 AM',
-      note: 'Morning batch',
-    },
-    {
-      id: '2',
-      item: 'Milk',
-      amount: '-2.1 L',
-      date: 'Jan 27 at 10:15 AM',
-      note: 'Cappuccinos and lattes',
-    },
-    {
-      id: '3',
-      item: 'Sugar',
-      amount: '-150 g',
-      date: 'Jan 27 at 11:00 AM',
-      note: '',
-    },
-  ]);
-
-  const renderItem = ({ item }) => (
-    <View style={styles.usageCard}>
-      <View style={styles.usageRow}>
-        <Text style={styles.usageItem}>{item.item}</Text>
-        <Text style={styles.usageAmount}>{item.amount}</Text>
-      </View>
-      <Text style={styles.usageDate}>{item.date}</Text>
-      {item.note ? <Text style={styles.usageNote}>{item.note}</Text> : null}
-    </View>
-  );
+export default function ProfileScreen() {
+  const [notifications, setNotifications] = useState(true);
+  const [lowStock, setLowStock] = useState(true);
+  const [qualityAlerts, setQualityAlerts] = useState(true);
 
   return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Daily Usage</Text>
-        <TouchableOpacity style={styles.addButton}>
-          <Ionicons name="add" size={22} color="#fff" />
-        </TouchableOpacity>
-      </View>
-      <Text style={styles.subtitle}>Track ingredient consumption</Text>
-
-      {/* Stats Row */}
-      <View style={styles.statsRow}>
-        <View style={styles.statCard}>
-          <Ionicons name="document-text-outline" size={22} color="#f57c00" />
-          <Text style={styles.statValue}>0</Text>
-          <Text style={styles.statLabel}>Entries Today</Text>
-        </View>
-        <View style={styles.statCard}>
-          <Ionicons name="calendar-outline" size={22} color="#388e3c" />
-          <Text style={styles.statValue}>Jul 26</Text>
-          <Text style={styles.statLabel}>Current Date</Text>
-        </View>
-        <View style={styles.statCard}>
-          <Ionicons name="cube-outline" size={22} color="#fbc02d" />
-          <Text style={styles.statValue}>5</Text>
-          <Text style={styles.statLabel}>Available Items</Text>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 30 }}>
+      {/* User Info */}
+      <View style={styles.userSection}>
+        <Ionicons name="person-circle-outline" size={50} color="#64B5F6" />
+        <View>
+          <Text style={styles.userName}>Café Manager</Text>
+          <Text style={styles.userEmail}>manager@nekokopi.com</Text>
         </View>
       </View>
 
-      {/* Recent Usage Section */}
-      <Text style={styles.sectionTitle}>Recent Usage Entries</Text>
+      {/* App Info */}
+      <View style={styles.infoCard}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Ionicons name="calendar-outline" size={24} color="#333" style={{ marginRight: 10 }} />
+          <View>
+            <Text style={styles.infoTitle}>Neko & Kopi Inventory</Text>
+            <Text style={styles.version}>Version 1.0.0</Text>
+            <Text style={styles.infoSubtitle}>
+              Professional inventory management system designed specifically for café operations
+            </Text>
+          </View>
+        </View>
+      </View>
 
-      <FlatList
-        data={usageData}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={{ paddingBottom: 20 }}
-      />
-    </View>
+      {/* Settings */}
+      <Text style={styles.sectionTitle}>Settings</Text>
+
+      <View style={styles.settingRow}>
+        <Ionicons name="notifications-outline" size={20} color="#333" />
+        <View style={styles.settingTextContainer}>
+          <Text style={styles.settingTitle}>Notifications</Text>
+          <Text style={styles.settingSubtitle}>Manage your notification preferences</Text>
+        </View>
+        <Switch value={notifications} onValueChange={setNotifications} />
+      </View>
+
+      <View style={styles.settingRow}>
+        <Ionicons name="alert-circle-outline" size={20} color="#333" />
+        <View style={styles.settingTextContainer}>
+          <Text style={styles.settingTitle}>Low Stock Alerts</Text>
+          <Text style={styles.settingSubtitle}>Get notified when items are running low</Text>
+        </View>
+        <Switch value={lowStock} onValueChange={setLowStock} />
+      </View>
+
+      <View style={styles.settingRow}>
+        <Ionicons name="checkmark-circle-outline" size={20} color="#333" />
+        <View style={styles.settingTextContainer}>
+          <Text style={styles.settingTitle}>Quality Alerts</Text>
+          <Text style={styles.settingSubtitle}>Monitor ingredient quality status</Text>
+        </View>
+        <Switch value={qualityAlerts} onValueChange={setQualityAlerts} />
+      </View>
+
+      {/* Support */}
+      <Text style={styles.sectionTitle}>Support</Text>
+
+      <TouchableOpacity style={styles.supportRow}>
+        <Ionicons name="help-circle-outline" size={20} color="#333" />
+        <Text style={styles.supportText}>Help & Support</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.supportRow}>
+        <Ionicons name="information-circle-outline" size={20} color="#333" />
+        <Text style={styles.supportText}>About Neko & Kopi</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.logoutButton}>
+        <Ionicons name="log-out-outline" size={20} color="#fff" />
+        <Text style={styles.logoutText}>Logout</Text>
+      </TouchableOpacity>
+
+      {/* Usage Statistics */}
+      <Text style={styles.sectionTitle}>Usage Statistics</Text>
+      <View style={styles.statsContainer}>
+        <View style={styles.statBox}>
+          <Text style={styles.statValue}>156</Text>
+          <Text style={styles.statLabel}>Entries This Month</Text>
+        </View>
+        <View style={styles.statBox}>
+          <Text style={styles.statValue}>23</Text>
+          <Text style={styles.statLabel}>Active Ingredients</Text>
+        </View>
+        <View style={styles.statBox}>
+          <Text style={styles.statValue}>4.8</Text>
+          <Text style={styles.statLabel}>Avg Quality Score</Text>
+        </View>
+        <View style={styles.statBox}>
+          <Text style={styles.statValue}>95%</Text>
+          <Text style={styles.statLabel}>Stock Accuracy</Text>
+        </View>
+      </View>
+
+      <Text style={styles.footerText}>
+        Streamlining café operations one ingredient at a time
+      </Text>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff', padding: 16 },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  headerTitle: { fontSize: 20, fontWeight: 'bold' },
-  subtitle: { fontSize: 13, color: '#777', marginBottom: 12 },
-  addButton: { backgroundColor: '#333', borderRadius: 20, padding: 6 },
-  statsRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 16 },
-  statCard: { alignItems: 'center', flex: 1 },
-  statValue: { fontSize: 16, fontWeight: 'bold', marginTop: 4 },
-  statLabel: { fontSize: 12, color: '#777', textAlign: 'center' },
-  sectionTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 10 },
-  usageCard: {
-    backgroundColor: '#fafafa',
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: '#eee',
+  container: { flex: 1, backgroundColor: "#fff", padding: 16 },
+  userSection: { flexDirection: "row", alignItems: "center", marginBottom: 16 },
+  userName: { fontSize: 18, fontWeight: "bold" },
+  userEmail: { fontSize: 13, color: "#666" },
+  infoCard: {
+    backgroundColor: "#f9f9f9",
+    borderRadius: 10,
+    padding: 14,
+    marginBottom: 16,
   },
-  usageRow: { flexDirection: 'row', justifyContent: 'space-between' },
-  usageItem: { fontSize: 15, fontWeight: '600' },
-  usageAmount: { fontSize: 15, fontWeight: '600', color: 'red' },
-  usageDate: { fontSize: 12, color: '#777', marginTop: 4 },
-  usageNote: { fontSize: 13, color: '#444', fontStyle: 'italic', marginTop: 4 },
+  infoTitle: { fontSize: 15, fontWeight: "bold" },
+  version: { color: "#1E88E5", fontSize: 13 },
+  infoSubtitle: { fontSize: 12, color: "#555", marginTop: 2 },
+  sectionTitle: { fontSize: 16, fontWeight: "bold", marginVertical: 10 },
+  settingRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "#f9f9f9",
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 10,
+  },
+  settingTextContainer: { flex: 1, marginHorizontal: 10 },
+  settingTitle: { fontSize: 14, fontWeight: "600" },
+  settingSubtitle: { fontSize: 12, color: "#666" },
+  supportRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f9f9f9",
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  supportText: { marginLeft: 10, fontSize: 14, fontWeight: "500" },
+  logoutButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#E53935",
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 16,
+  },
+  logoutText: { color: "#fff", fontWeight: "bold", marginLeft: 6 },
+  statsContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+  },
+  statBox: {
+    backgroundColor: "#f9f9f9",
+    borderRadius: 10,
+    padding: 16,
+    width: "47%",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  statValue: { fontSize: 18, fontWeight: "bold" },
+  statLabel: { fontSize: 12, color: "#666", textAlign: "center" },
+  footerText: { fontSize: 12, color: "#777", textAlign: "center", marginTop: 10 },
 });
