@@ -1,84 +1,132 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+} from "react-native";
 
-export default function LoginScreen({ navigation }) {
+const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // Hardcoded login credentials
-  const validEmail = "admin@cafe.com";
-  const validPassword = "12345";
-
   const handleLogin = () => {
-    if (email === validEmail && password === validPassword) {
-      navigation.replace("MainTabs"); // go to dashboard
+    if (email === "manager@nekokopi.com" && password === "password") {
+      navigation.replace("MainTabs"); // go to dashboard after login
     } else {
-      Alert.alert("Login Failed", "Invalid email or password.");
+      Alert.alert("Login Failed", "Invalid email or password");
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>☕ Café Inventory Login</Text>
+      {/* Logo */}
+      <View style={styles.logoContainer}>
+        <Text style={styles.logo}>☕</Text>
+      </View>
 
+      {/* Title */}
+      <Text style={styles.title}>Neko & Kopi</Text>
+      <Text style={styles.subtitle}>Inventory Management</Text>
+
+      {/* Input Fields */}
       <TextInput
         style={styles.input}
-        placeholder="Email Address"
+        placeholder="Email address"
+        value={email}
+        onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
-        value={email}
-        onChangeText={(text) => setEmail(text)}
       />
-
       <TextInput
         style={styles.input}
         placeholder="Password"
-        secureTextEntry
         value={password}
-        onChangeText={(text) => setPassword(text)}
+        onChangeText={setPassword}
+        secureTextEntry
       />
 
+      {/* Button */}
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
+        <Text style={styles.buttonText}>Sign In</Text>
       </TouchableOpacity>
+
+      {/* Forgot Password */}
+      <Text style={styles.link}>Forgot Password?</Text>
+
+      {/* Demo Credentials */}
+      <View style={styles.demoBox}>
+        <Text style={styles.demoTitle}>Demo Credentials</Text>
+        <Text>Email: manager@nekokopi.com</Text>
+        <Text>Password: password</Text>
+      </View>
+
+      {/* Sign Up Link */}
+      <Text style={styles.footerText}>
+        Don’t have an account?{" "}
+        <Text
+          style={styles.linkHighlight}
+          onPress={() => navigation.navigate("SignUp")}
+        >
+          Sign Up
+        </Text>
+      </Text>
     </View>
   );
-}
+};
+
+export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8f5f0",
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
+    backgroundColor: "#fff",
   },
-  title: {
-    fontSize: 26,
-    fontWeight: "bold",
-    marginBottom: 40,
-    color: "#5a3825",
+  logoContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: "#E0F7FA",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 20,
   },
+  logo: { fontSize: 40 },
+  title: { fontSize: 24, fontWeight: "bold" },
+  subtitle: { fontSize: 16, color: "#007AFF", marginBottom: 20 },
   input: {
     width: "100%",
     height: 50,
-    borderColor: "#ccc",
     borderWidth: 1,
+    borderColor: "#ccc",
     borderRadius: 10,
     paddingHorizontal: 15,
-    marginBottom: 20,
-    backgroundColor: "#fff",
+    marginBottom: 15,
   },
   button: {
-    backgroundColor: "#8b5e3c",
-    paddingVertical: 15,
-    borderRadius: 10,
     width: "100%",
+    height: 50,
+    backgroundColor: "#29B6F6",
+    justifyContent: "center",
     alignItems: "center",
+    borderRadius: 10,
+    marginBottom: 10,
   },
-  buttonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
+  buttonText: { color: "#fff", fontSize: 18, fontWeight: "600" },
+  link: { color: "#007AFF", marginBottom: 20 },
+  demoBox: {
+    backgroundColor: "#E8F5E9",
+    padding: 15,
+    borderRadius: 8,
+    width: "100%",
+    marginBottom: 20,
   },
+  demoTitle: { fontWeight: "bold", marginBottom: 5 },
+  footerText: { fontSize: 14 },
+  linkHighlight: { color: "#007AFF", fontWeight: "600" },
 });
