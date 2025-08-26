@@ -1,11 +1,12 @@
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 // Import your screens
 import LoginScreen from "./screens/LoginScreen";
+import SignUpScreen from "./screens/SignUpScreen";   // ✅ add this
 import DashboardScreen from "./screens/DashboardScreen";
 import InventoryScreen from "./screens/InventoryScreen";
 import DailyUsageScreen from "./screens/DailyUsageScreen";
@@ -14,7 +15,7 @@ import ProfileScreen from "./screens/ProfileScreen";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// Bottom Tab Navigator (your current setup)
+// Bottom Tab Navigator (Main App Tabs)
 function MainTabs() {
   return (
     <Tab.Navigator>
@@ -23,7 +24,11 @@ function MainTabs() {
         component={DashboardScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="view-dashboard" size={size} color={color} />
+            <MaterialCommunityIcons
+              name="view-dashboard"
+              size={size}
+              color={color}
+            />
           ),
         }}
       />
@@ -32,7 +37,11 @@ function MainTabs() {
         component={InventoryScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="cube-outline" size={size} color={color} />
+            <MaterialCommunityIcons
+              name="cube-outline"
+              size={size}
+              color={color}
+            />
           ),
         }}
       />
@@ -41,7 +50,11 @@ function MainTabs() {
         component={DailyUsageScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="clipboard-text" size={size} color={color} />
+            <MaterialCommunityIcons
+              name="clipboard-text"
+              size={size}
+              color={color}
+            />
           ),
         }}
       />
@@ -50,7 +63,11 @@ function MainTabs() {
         component={ProfileScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="account" size={size} color={color} />
+            <MaterialCommunityIcons
+              name="account"
+              size={size}
+              color={color}
+            />
           ),
         }}
       />
@@ -65,6 +82,10 @@ export default function App() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {/* First screen when app starts */}
         <Stack.Screen name="Login" component={LoginScreen} />
+
+        {/* Sign Up screen */}
+        <Stack.Screen name="SignUp" component={SignUpScreen} />
+
         {/* After login, show bottom tabs */}
         <Stack.Screen name="MainTabs" component={MainTabs} />
       </Stack.Navigator>
