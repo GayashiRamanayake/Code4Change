@@ -1,40 +1,73 @@
-import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import DashboardScreen from './screens/DashboardScreen';
-import InventoryScreen from './screens/InventoryScreen';
-import DailyUsageScreen from './screens/DailyUsageScreen';
-import ProfileScreen from './screens/ProfileScreen';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import * as React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
+// Import your screens
+import LoginScreen from "./screens/LoginScreen";
+import DashboardScreen from "./screens/DashboardScreen";
+import InventoryScreen from "./screens/InventoryScreen";
+import DailyUsageScreen from "./screens/DailyUsageScreen";
+import ProfileScreen from "./screens/ProfileScreen";
+
+const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-export default function App() {
+// Bottom Tab Navigator (your current setup)
+function MainTabs() {
   return (
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Dashboard" component={DashboardScreen} options={{
+    <Tab.Navigator>
+      <Tab.Screen
+        name="Dashboard"
+        component={DashboardScreen}
+        options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="view-dashboard" size={size} color={color} />
           ),
-        }} />
-        <Tab.Screen name="Inventory" component={InventoryScreen} options={{
+        }}
+      />
+      <Tab.Screen
+        name="Inventory"
+        component={InventoryScreen}
+        options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="cube-outline" size={size} color={color} />
           ),
-        }} />
-        <Tab.Screen name="Daily Usage" component={DailyUsageScreen} options={{
+        }}
+      />
+      <Tab.Screen
+        name="Daily Usage"
+        component={DailyUsageScreen}
+        options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="clipboard-text" size={size} color={color} />
           ),
-        }} />
-        <Tab.Screen name="Profile" component={ProfileScreen} options={{
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="account" size={size} color={color} />
           ),
-        }} />
-      </Tab.Navigator>
-    </NavigationContainer>
+        }}
+      />
+    </Tab.Navigator>
   );
 }
 
+// App entry point
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {/* First screen when app starts */}
+        <Stack.Screen name="Login" component={LoginScreen} />
+        {/* After login, show bottom tabs */}
+        <Stack.Screen name="MainTabs" component={MainTabs} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
