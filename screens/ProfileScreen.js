@@ -9,10 +9,14 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-export default function ProfileScreen() {
+export default function ProfileScreen({ navigation }) {
   const [notifications, setNotifications] = useState(true);
   const [lowStock, setLowStock] = useState(true);
   const [qualityAlerts, setQualityAlerts] = useState(true);
+
+  const handleLogout = () => {
+    navigation.replace("Login"); // go back to Login screen
+  };
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 30 }}>
@@ -82,7 +86,8 @@ export default function ProfileScreen() {
         <Text style={styles.supportText}>About Neko & Kopi</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.logoutButton}>
+      {/* Logout Button */}
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Ionicons name="log-out-outline" size={20} color="#fff" />
         <Text style={styles.logoutText}>Logout</Text>
       </TouchableOpacity>
