@@ -8,13 +8,13 @@ import {
   FlatList,
 } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import AddItemModal from "../components/AddItemModal";
 
 export default function InventoryScreen({ navigation }) {
   const [selectedCategory, setSelectedCategory] = useState("All");
-
   const categories = ["All", "Coffee", "Dairy", "Sweeteners"];
 
-  const inventoryData = [
+  const initialInventory = [
     {
       id: "1",
       name: "Coffee Beans",
@@ -35,10 +35,17 @@ export default function InventoryScreen({ navigation }) {
     },
   ];
 
+  const [inventoryList, setInventoryList] = useState(initialInventory);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleAddItem = (item) => {
+    setInventoryList([...inventoryList, item]);
+  };
+
   const filteredData =
     selectedCategory === "All"
-      ? inventoryData
-      : inventoryData.filter((item) => item.category === selectedCategory);
+      ? inventoryList
+      : inventoryList.filter((item) => item.category === selectedCategory);
 
   const renderItem = ({ item }) => (
     <View style={styles.itemCard}>
@@ -68,20 +75,9 @@ export default function InventoryScreen({ navigation }) {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Inventory Management</Text>
-        <View style={styles.headerButtons}>
-          <TouchableOpacity
-            style={styles.historyButton}
-            onPress={() => alert("History button pressed!")}
-          >
-            <Ionicons name="time-outline" size={14} color="#fff" />
-            <Text style={styles.historyButtonText}>History</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.addButton}>
-            <Text style={styles.addButtonText}>Add</Text>
-            <Ionicons name="add" size={18} color="#fff" />
-          </TouchableOpacity>
-        </View>
+        <Text style={styles.headerSubtitle}>
+          Stay updated on stock availabilty in Inventory
+        </Text>
       </View>
 
       {/* Search Bar */}
@@ -91,6 +87,25 @@ export default function InventoryScreen({ navigation }) {
           placeholder="Search ingredients..."
           style={styles.searchInput}
         />
+      </View>
+
+      {/* History and Add Buttons */}
+      <View style={styles.headerButtons}>
+        <TouchableOpacity
+          style={styles.historyButton}
+          onPress={() => alert("History button pressed!")}
+        >
+          <Ionicons name="time-outline" size={14} color="#fff" />
+          <Text style={styles.historyButtonText}>History</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => setModalVisible(true)}
+        >
+          <Ionicons name="add" size={18} color="#fff" />
+          <Text style={styles.addButtonText}> Add</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Categories */}
@@ -123,6 +138,13 @@ export default function InventoryScreen({ navigation }) {
         keyExtractor={(item) => item.id}
         contentContainerStyle={{ paddingBottom: 20 }}
       />
+
+      {/* Add Item Modal */}
+      <AddItemModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onAdd={handleAddItem}
+      />
     </View>
   );
 }
@@ -132,25 +154,26 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "column",
     alignItems: "flex-start",
-    width:"100%",
-    marginBottom: 16,
+    width: "100%",
+    marginBottom: 10,
   },
-  headerTitle: { fontSize: 18, fontWeight: "bold"},
-  headerButtons: { flexDirection: "row", alignItems: "center",marginTop:30,justifyContent: "flex-start", },
+  headerTitle: { fontSize: 18, fontWeight: "bold" },
+  headerSubtitle: { fontSize: 14, color: "#666", marginTop: 4, marginBottom: 4 },
+  headerButtons: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+    justifyContent: "flex-start",
+  },
   addButton: {
-  flexDirection: "row",
-  alignItems: "center",
-  backgroundColor: "#333",
-  borderRadius: 20,
-  paddingHorizontal: 12,
-  paddingVertical: 6,
-},
-addButtonText: {
-  color: "#fff",
-  fontWeight: "bold",
-  fontSize: 14,
-  marginRight: 4, // space between text and icon
-},
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#333",
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  addButtonText: { color: "#fff", fontWeight: "bold", fontSize: 14, marginLeft: 5 },
   historyButton: {
     flexDirection: "row",
     alignItems: "center",
@@ -158,14 +181,9 @@ addButtonText: {
     borderRadius: 20,
     paddingHorizontal: 12,
     paddingVertical: 6,
-    marginRight: 5,
+    marginRight: 10,
   },
-  historyButtonText: {
-    color: "#fff",
-    marginLeft: 6,
-    fontWeight: "bold",
-    fontSize: 14,
-  },
+  historyButtonText: { color: "#fff", fontWeight: "bold", fontSize: 14, marginLeft: 6 },
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
