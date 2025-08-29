@@ -15,16 +15,31 @@ const SignUpScreen = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleSignUp = () => {
-    if (!name || !email || !password || !confirmPassword) {
-      Alert.alert("Error", "Please fill all fields");
+    // Validation checks with specific messages
+    if (!name.trim()) {
+      Alert.alert("Error", "Please enter your full name");
+      return;
+    }
+    if (!email.trim()) {
+      Alert.alert("Error", "Please enter your email");
+      return;
+    }
+    if (!password) {
+      Alert.alert("Error", "Please enter your password");
+      return;
+    }
+    if (!confirmPassword) {
+      Alert.alert("Error", "Please confirm your password");
       return;
     }
     if (password !== confirmPassword) {
       Alert.alert("Error", "Passwords do not match");
       return;
     }
-    Alert.alert("Success", "Account created! Please log in.");
-    navigation.replace("Login");
+
+    // No backend yet, navigate directly to DashboardScreen
+    Alert.alert("Success", "Account created! Welcome to the dashboard.");
+    navigation.replace("Dashboard"); // Make sure Dashboard is registered in your navigator
   };
 
   return (
