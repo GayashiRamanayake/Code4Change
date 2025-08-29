@@ -80,14 +80,7 @@ export default function InventoryScreen({ navigation }) {
         </Text>
       </View>
 
-      {/* Search Bar */}
-      <View style={styles.searchContainer}>
-        <Ionicons name="search" size={20} color="#aaa" />
-        <TextInput
-          placeholder="Search ingredients..."
-          style={styles.searchInput}
-        />
-      </View>
+      
 
       {/* History and Add Buttons */}
       <View style={styles.headerButtons}>
@@ -107,6 +100,17 @@ export default function InventoryScreen({ navigation }) {
           <Text style={styles.addButtonText}> Add</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Search Bar */}
+      <View style={styles.searchContainer}>
+        <Ionicons name="search" size={20} color="#aaa" />
+        <TextInput
+          placeholder="Search ingredients..."
+          style={styles.searchInput}
+        />
+      </View>
+
+      
 
       {/* Categories */}
       <View style={styles.categoryRow}>
@@ -164,6 +168,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
     justifyContent: "flex-start",
+    marginTop:20,
+    marginLeft:170,
   },
   addButton: {
     flexDirection: "row",
