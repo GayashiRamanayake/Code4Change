@@ -68,21 +68,12 @@ export default function InventoryScreen({ navigation }) {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Inventory Management</Text>
-        <View style={styles.headerButtons}>
-          <TouchableOpacity
-            style={styles.historyButton}
-            onPress={() => alert("History button pressed!")}
-          >
-            <Ionicons name="time-outline" size={14} color="#fff" />
-            <Text style={styles.historyButtonText}>History</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.addButton}>
-            <Text style={styles.addButtonText}>Add</Text>
-            <Ionicons name="add" size={18} color="#fff" />
-          </TouchableOpacity>
-        </View>
+        <Text style={styles.headerSubtitle}>
+          Stay updated on stock availabilty in Inventory
+        </Text>
+        
       </View>
+      
 
       {/* Search Bar */}
       <View style={styles.searchContainer}>
@@ -92,6 +83,22 @@ export default function InventoryScreen({ navigation }) {
           style={styles.searchInput}
         />
       </View>
+      
+      {/* History and Add Buttons */}
+      <View style={styles.headerButtons}>
+          <TouchableOpacity
+            style={styles.historyButton}
+            onPress={() => alert("History button pressed!")}
+          >
+            <Ionicons name="time-outline" size={14} color="#fff" />
+            <Text style={styles.historyButtonText}>History</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.addButton}>
+            <Ionicons name="add" size={18} color="#fff" />
+            <Text style={styles.addButtonText}> Add</Text>
+          </TouchableOpacity>
+        </View>
 
       {/* Categories */}
       <View style={styles.categoryRow}>
@@ -133,10 +140,12 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "flex-start",
     width:"100%",
-    marginBottom: 16,
+    marginBottom: 10,
   },
   headerTitle: { fontSize: 18, fontWeight: "bold"},
-  headerButtons: { flexDirection: "row", alignItems: "center",marginTop:30,justifyContent: "flex-start", },
+
+  headerButtons: { flexDirection: "row", alignItems: "center",marginBottom:10, marginLeft: 90, justifyContent: "flex-start",},
+
   addButton: {
   flexDirection: "row",
   alignItems: "center",
@@ -145,11 +154,17 @@ const styles = StyleSheet.create({
   paddingHorizontal: 12,
   paddingVertical: 6,
 },
+headerSubtitle:{
+  fontSize:14,
+  color:"#666",
+  marginTop:4,
+  marginBottom: 4,
+},
 addButtonText: {
   color: "#fff",
   fontWeight: "bold",
   fontSize: 14,
-  marginRight: 4, // space between text and icon
+  marginRight: 7, // space between text and icon
 },
   historyButton: {
     flexDirection: "row",
