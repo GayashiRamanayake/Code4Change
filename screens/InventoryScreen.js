@@ -1,41 +1,65 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
-export default function InventoryScreen() {
-  const [inventoryData] = useState([
-    { id: '1', name: 'Tomatoes', category: 'Vegetables', stock: '50 kg', status: 'good', value: '$175.00', min: '10 kg', max: '100 kg' },
-    { id: '2', name: 'Ground Beef', category: 'Meat', stock: '25 kg', status: 'good', value: '$204.75', min: '5 kg', max: '50 kg' },
-    { id: '3', name: 'Mozzarella Cheese', category: 'Dairy', stock: '15 kg', status: 'good', value: '$315.25', min: '5 kg', max: '30 kg' },
-    { id: '4', name: 'Flour', category: 'Bakery', stock: '80 kg', status: 'good', value: '$100.09', min: '20 kg', max: '120 kg' },
-    { id: '5', name: 'Olive Oil', category: 'Oils', stock: '12 L', status: 'good', value: '$118.18', min: '5 L', max: '25 L' },
-    { id: '6', name: 'Chicken Breast', category: 'Meat', stock: '40 kg', status: 'good', value: '$310.00', min: '10 kg', max: '70 kg' },
-    { id: '7', name: 'Lettuce', category: 'Vegetables', stock: '30 heads', status: 'good', value: '$45.00', min: '5 heads', max: '60 heads' },
-    { id: '8', name: 'Butter', category: 'Dairy', stock: '8 kg', status: 'good', value: '$88.00', min: '2 kg', max: '20 kg' },
-    { id: '9', name: 'Sugar', category: 'Pantry', stock: '60 kg', status: 'good', value: '$120.00', min: '15 kg', max: '80 kg' },
-    { id: '10', name: 'Salt', category: 'Pantry', stock: '25 kg', status: 'good', value: '$30.00', min: '5 kg', max: '40 kg' },
-    { id: '11', name: 'Black Pepper', category: 'Spices', stock: '5 kg', status: 'good', value: '$60.00', min: '1 kg', max: '10 kg' },
-    { id: '12', name: 'Rice', category: 'Grains', stock: '100 kg', status: 'good', value: '$200.00', min: '30 kg', max: '150 kg' },
-    { id: '13', name: 'Pasta', category: 'Grains', stock: '40 kg', status: 'good', value: '$90.00', min: '10 kg', max: '70 kg' },
-    { id: '14', name: 'Eggs', category: 'Dairy', stock: '200 pcs', status: 'good', value: '$60.00', min: '50 pcs', max: '300 pcs' },
-    { id: '15', name: 'Yeast', category: 'Bakery', stock: '2 kg', status: 'good', value: '$20.00', min: '500 g', max: '5 kg' },
-    { id: '16', name: 'Carrots', category: 'Vegetables', stock: '25 kg', status: 'good', value: '$55.00', min: '5 kg', max: '50 kg' },
-    { id: '17', name: 'Onions', category: 'Vegetables', stock: '40 kg', status: 'good', value: '$80.00', min: '10 kg', max: '70 kg' },
-    { id: '18', name: 'Garlic', category: 'Vegetables', stock: '10 kg', status: 'good', value: '$40.00', min: '2 kg', max: '20 kg' },
-    { id: '19', name: 'Fish Fillets', category: 'Seafood', stock: '20 kg', status: 'good', value: '$250.00', min: '5 kg', max: '40 kg' },
-    { id: '20', name: 'Shrimp', category: 'Seafood', stock: '15 kg', status: 'good', value: '$180.00', min: '5 kg', max: '30 kg' },
-  ]);
+export default function InventoryScreen({ navigation }) {
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
+  const categories = ["All", "Coffee", "Dairy", "Sweeteners"];
+
+  const inventoryData = [
+    {
+      id: "1",
+      name: "Coffee Beans",
+      category: "Coffee",
+      quantity: "2.5 kg",
+      status: "GOOD",
+      lastUpdated: "2025-01-27",
+      lowStock: "1 kg",
+    },
+    {
+      id: "2",
+      name: "Milk",
+      category: "Dairy",
+      quantity: "3 L",
+      status: "GOOD",
+      lastUpdated: "2025-01-27",
+      lowStock: "1000 ml",
+    },
+  ];
+
+  const filteredData =
+    selectedCategory === "All"
+      ? inventoryData
+      : inventoryData.filter((item) => item.category === selectedCategory);
 
   const renderItem = ({ item }) => (
-    <View style={styles.row}>
-      <Text style={styles.cellName}>{item.name}</Text>
-      <Text style={styles.cell}>{item.category}</Text>
-      <Text style={styles.cell}>{item.stock}</Text>
-      <Text style={[styles.cellStatus, { color: item.status === 'good' ? 'green' : 'red' }]}>
-        {item.status}
-      </Text>
-      <Text style={styles.cell}>{item.value}</Text>
+    <View style={styles.itemCard}>
+      <View style={{ flex: 1 }}>
+        <Text style={styles.itemName}>{item.name}</Text>
+        <Text style={styles.itemCategory}>{item.category}</Text>
+        <View style={styles.row}>
+          <Text style={styles.itemQuantity}>{item.quantity}</Text>
+          <View style={styles.statusDot} />
+          <Text style={styles.statusText}>{item.status}</Text>
+        </View>
+        <Text style={styles.itemDate}>Last updated: {item.lastUpdated}</Text>
+        <Text style={styles.lowStock}>Low stock: {item.lowStock}</Text>
+      </View>
+      <TouchableOpacity>
+        <MaterialCommunityIcons
+          name="note-edit-outline"
+          size={22}
+          color="#555"
+        />
+      </TouchableOpacity>
     </View>
   );
 
@@ -44,41 +68,57 @@ export default function InventoryScreen() {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Inventory Management</Text>
-        <TouchableOpacity style={styles.addButton}>
-          <Ionicons name="add" size={22} color="#fff" />
-        </TouchableOpacity>
-      </View>
-      <Text style={styles.subtitle}>Track ingredient consumption</Text>
+        <View style={styles.headerButtons}>
+          <TouchableOpacity
+            style={styles.historyButton}
+            onPress={() => alert("History button pressed!")}
+          >
+            <Ionicons name="time-outline" size={14} color="#fff" />
+            <Text style={styles.historyButtonText}>History</Text>
+          </TouchableOpacity>
 
-      {/* Action Buttons */}
-      <View style={styles.actionRow}>
-        <TouchableOpacity style={[styles.actionButton, { backgroundColor: '#4CAF50' }]}>
-          <Text style={styles.actionText}>+ Add Item</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.actionButton, { backgroundColor: '#9E9E9E' }]}>
-          <Text style={styles.actionText}>Export</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.actionButton, { backgroundColor: '#64B5F6' }]}>
-          <Text style={styles.actionText}>History</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.addButton}>
+            <Text style={styles.addButtonText}>Add</Text>
+            <Ionicons name="add" size={18} color="#fff" />
+          </TouchableOpacity>
+        </View>
       </View>
 
-      {/* Current Inventory Section */}
-      <Text style={styles.sectionTitle}>Current Inventory</Text>
-      <Text style={styles.sectionSubtitle}>Manage your current stock levels</Text>
-
-      {/* Table Header */}
-      <View style={[styles.row, styles.tableHeader]}>
-        <Text style={styles.cellHeader}>ITEM</Text>
-        <Text style={styles.cellHeader}>CATEGORY</Text>
-        <Text style={styles.cellHeader}>STOCK</Text>
-        <Text style={styles.cellHeader}>STATUS</Text>
-        <Text style={styles.cellHeader}>VALUE</Text>
+      {/* Search Bar */}
+      <View style={styles.searchContainer}>
+        <Ionicons name="search" size={20} color="#aaa" />
+        <TextInput
+          placeholder="Search ingredients..."
+          style={styles.searchInput}
+        />
       </View>
 
-      {/* List */}
+      {/* Categories */}
+      <View style={styles.categoryRow}>
+        {categories.map((cat) => (
+          <TouchableOpacity
+            key={cat}
+            style={[
+              styles.categoryButton,
+              selectedCategory === cat && styles.categorySelected,
+            ]}
+            onPress={() => setSelectedCategory(cat)}
+          >
+            <Text
+              style={[
+                styles.categoryText,
+                selectedCategory === cat && styles.categoryTextSelected,
+              ]}
+            >
+              {cat}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      {/* Inventory List */}
       <FlatList
-        data={inventoryData}
+        data={filteredData}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         contentContainerStyle={{ paddingBottom: 20 }}
@@ -88,25 +128,88 @@ export default function InventoryScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff', padding: 16 },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  headerTitle: { fontSize: 20, fontWeight: 'bold' },
-  subtitle: { fontSize: 13, color: '#777', marginBottom: 12 },
-  addButton: { backgroundColor: '#333', borderRadius: 20, padding: 6 },
-  actionRow: { flexDirection: 'row', marginBottom: 12 },
-  actionButton: {
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 20,
-    marginRight: 10,
+  container: { flex: 1, backgroundColor: "#fff", padding: 16 },
+  header: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+    width:"100%",
+    marginBottom: 16,
   },
-  actionText: { color: '#fff', fontWeight: '600' },
-  sectionTitle: { fontSize: 18, fontWeight: 'bold', marginTop: 10 },
-  sectionSubtitle: { fontSize: 13, color: '#777', marginBottom: 10 },
-  tableHeader: { backgroundColor: '#f5f5f5', borderRadius: 6, paddingVertical: 8 },
-  row: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 },
-  cellHeader: { flex: 1, fontWeight: 'bold', fontSize: 12 },
-  cellName: { flex: 1, fontWeight: '600', fontSize: 14 },
-  cell: { flex: 1, fontSize: 13 },
-  cellStatus: { flex: 1, fontWeight: 'bold', textTransform: 'uppercase' },
+  headerTitle: { fontSize: 18, fontWeight: "bold"},
+  headerButtons: { flexDirection: "row", alignItems: "center",marginTop:30,justifyContent: "flex-start", },
+  addButton: {
+  flexDirection: "row",
+  alignItems: "center",
+  backgroundColor: "#333",
+  borderRadius: 20,
+  paddingHorizontal: 12,
+  paddingVertical: 6,
+},
+addButtonText: {
+  color: "#fff",
+  fontWeight: "bold",
+  fontSize: 14,
+  marginRight: 4, // space between text and icon
+},
+  historyButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#4CAF50",
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    marginRight: 5,
+  },
+  historyButtonText: {
+    color: "#fff",
+    marginLeft: 6,
+    fontWeight: "bold",
+    fontSize: 14,
+  },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f1f1f1",
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    height: 40,
+    marginBottom: 16,
+  },
+  searchInput: { flex: 1, marginLeft: 8 },
+  categoryRow: { flexDirection: "row", marginBottom: 16 },
+  categoryButton: {
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    backgroundColor: "#f1f1f1",
+    borderRadius: 20,
+    marginRight: 8,
+  },
+  categorySelected: { backgroundColor: "#80DEEA" },
+  categoryText: { color: "#555" },
+  categoryTextSelected: { color: "#fff", fontWeight: "bold" },
+  itemCard: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 12,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    borderWidth: 1,
+    borderColor: "#eee",
+  },
+  itemName: { fontWeight: "bold", fontSize: 16 },
+  itemCategory: { color: "#888", fontSize: 13 },
+  row: { flexDirection: "row", alignItems: "center", marginVertical: 4 },
+  itemQuantity: { fontSize: 15, marginRight: 6 },
+  statusDot: {
+    width: 8,
+    height: 8,
+    backgroundColor: "green",
+    borderRadius: 4,
+    marginHorizontal: 4,
+  },
+  statusText: { fontSize: 13, color: "green" },
+  itemDate: { fontSize: 11, color: "#888" },
+  lowStock: { fontSize: 11, color: "#999" },
 });
