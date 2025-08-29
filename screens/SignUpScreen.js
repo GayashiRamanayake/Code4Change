@@ -38,8 +38,8 @@ const SignUpScreen = ({ navigation }) => {
     }
 
     // No backend yet, navigate directly to DashboardScreen
-    Alert.alert("Success", "Account created! Welcome to the dashboard.");
-    navigation.replace("Dashboard"); // Make sure Dashboard is registered in your navigator
+     Alert.alert("Success", "Account created! Welcome to the dashboard.");
+  navigation.replace("MainTabs");
   };
 
   return (
