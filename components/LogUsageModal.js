@@ -50,10 +50,24 @@ export default function LogUsageModal({ visible, onClose, onSubmit, inventoryIte
             onChangeText={setAmount}
           />
 
-          {/* Log Button */}
-          <TouchableOpacity style={styles.logButton} onPress={handleSubmit}>
-            <Text style={styles.logButtonText}>Log Usage</Text>
-          </TouchableOpacity>
+          {/* Buttons Row */}
+          <View style={styles.buttonRow}>
+            {/* Cancel Button */}
+            <TouchableOpacity
+              style={[styles.button, styles.cancelButton]}
+              onPress={onClose}
+            >
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </TouchableOpacity>
+
+            {/* Log Usage Button */}
+            <TouchableOpacity
+              style={[styles.button, styles.logButton]}
+              onPress={handleSubmit}
+            >
+              <Text style={styles.logButtonText}>Log Usage</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </Modal>
@@ -90,12 +104,32 @@ const styles = StyleSheet.create({
     padding: 10,
     marginTop: 4,
   },
-  logButton: {
+  buttonRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 20,
-    backgroundColor: "#333",
-    borderRadius: 8,
-    padding: 12,
-    alignItems: "center",
   },
-  logButtonText: { color: "#fff", fontWeight: "bold", fontSize: 16 },
+  button: {
+    flex: 1,
+    padding: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    marginHorizontal: 5,
+  },
+  logButton: {
+    backgroundColor: "#333",
+  },
+  logButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  cancelButton: {
+    backgroundColor: "#ccc",
+  },
+  cancelButtonText: {
+    color: "#333",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
 });
