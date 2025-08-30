@@ -9,9 +9,13 @@ import {
 } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import AddItemModal from "../components/AddItemModal";
+import DatePickerModal from "../components/DatePickerModal"; // import your modal
 
 export default function InventoryScreen({ navigation }) {
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [dateModalVisible, setDateModalVisible] = useState(false);
+
   const categories = ["All", "Coffee", "Dairy", "Sweeteners"];
 
   const initialInventory = [
@@ -36,10 +40,14 @@ export default function InventoryScreen({ navigation }) {
   ];
 
   const [inventoryList, setInventoryList] = useState(initialInventory);
-  const [modalVisible, setModalVisible] = useState(false);
 
   const handleAddItem = (item) => {
     setInventoryList([...inventoryList, item]);
+  };
+
+  const handleViewHistory = (selectedDate) => {
+    navigation.navigate("History", { date: selectedDate });
+    setDateModalVisible(false);
   };
 
   const filteredData =
@@ -80,13 +88,11 @@ export default function InventoryScreen({ navigation }) {
         </Text>
       </View>
 
-      
-
       {/* History and Add Buttons */}
       <View style={styles.headerButtons}>
         <TouchableOpacity
           style={styles.historyButton}
-          onPress={() => alert("History button pressed!")}
+          onPress={() => setDateModalVisible(true)}
         >
           <Ionicons name="time-outline" size={14} color="#fff" />
           <Text style={styles.historyButtonText}>History</Text>
@@ -109,8 +115,6 @@ export default function InventoryScreen({ navigation }) {
           style={styles.searchInput}
         />
       </View>
-
-      
 
       {/* Categories */}
       <View style={styles.categoryRow}>
@@ -149,6 +153,13 @@ export default function InventoryScreen({ navigation }) {
         onClose={() => setModalVisible(false)}
         onAdd={handleAddItem}
       />
+
+      {/* Date Picker Modal */}
+      <DatePickerModal
+        visible={dateModalVisible}
+        onClose={() => setDateModalVisible(false)}
+        onViewHistory={handleViewHistory}
+      />
     </View>
   );
 }
@@ -168,8 +179,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
     justifyContent: "flex-start",
-    marginTop:20,
-    marginLeft:170,
+    marginTop: 20,
+    marginLeft: 170,
   },
   addButton: {
     flexDirection: "row",
