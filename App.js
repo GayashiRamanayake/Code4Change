@@ -11,6 +11,8 @@ import DashboardScreen from "./screens/DashboardScreen";
 import InventoryScreen from "./screens/InventoryScreen";
 import DailyUsageScreen from "./screens/DailyUsageScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+import HistoryScreen from "./screens/HistoryScreen";
+
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -88,6 +90,9 @@ export default function App() {
 
         {/* After login, show bottom tabs */}
         <Stack.Screen name="MainTabs" component={MainTabs} />
+        
+        <Stack.Screen name="History" component={HistoryScreen} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
