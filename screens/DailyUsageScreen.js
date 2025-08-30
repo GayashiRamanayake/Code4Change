@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import LogUsageModal from '../components/LogUsageModal';
 
 export default function DailyUsageScreen() {
   const [usageData] = useState([
@@ -27,6 +28,8 @@ export default function DailyUsageScreen() {
     },
   ]);
 
+  const [modalVisible, setModalVisible] = useState(false);
+
   const renderItem = ({ item }) => (
     <View style={styles.usageCard}>
       <View style={styles.usageRow}>
@@ -43,7 +46,8 @@ export default function DailyUsageScreen() {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Daily Usage</Text>
-        <TouchableOpacity style={styles.addButton}>
+
+        <TouchableOpacity style={styles.addButton} onPress={()=>setModalVisible(true)}>
           <Ionicons name="add" size={22} color="#fff" />
         </TouchableOpacity>
       </View>
@@ -76,6 +80,20 @@ export default function DailyUsageScreen() {
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         contentContainerStyle={{ paddingBottom: 20 }}
+      />
+
+      <LogUsageModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onSubmit={(data) => {
+          console.log("Usage logged:", data);
+          setModalVisible(false);
+        }}
+        inventoryItems={[
+          { id: '1', name: 'Milk' },
+          { id: '2', name: 'Coffee Beans' },
+          { id: '3', name: 'Sugar' },
+        ]}
       />
     </View>
   );
