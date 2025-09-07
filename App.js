@@ -5,13 +5,13 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 // Import your screens
-import LoginScreen from "./screens/LoginScreen";
-import SignUpScreen from "./screens/SignUpScreen";   // ✅ add this
-import DashboardScreen from "./screens/DashboardScreen";
-import InventoryScreen from "./screens/InventoryScreen";
-import DailyUsageScreen from "./screens/DailyUsageScreen";
-import ProfileScreen from "./screens/ProfileScreen";
-import HistoryScreen from "./screens/HistoryScreen";
+import LoginScreen from "./frontend/screens/LoginScreen";
+import SignUpScreen from "./frontend/screens/SignUpScreen";   // ✅ add this
+import DashboardScreen from "./frontend/screens/DashboardScreen";
+import InventoryScreen from "./frontend/screens/InventoryScreen";
+import DailyUsageScreen from "./frontend/screens/DailyUsageScreen";
+import ProfileScreen from "./frontend/screens/ProfileScreen";
+import HistoryScreen from "./frontend/screens/HistoryScreen";
 
 
 const Stack = createStackNavigator();
