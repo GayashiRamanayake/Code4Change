@@ -1,18 +1,12 @@
-// Import Firebase modules
-import { initializeApp } from "firebase/app";
-import { getDatabase } from "firebase/database";
-
 
 // Import the functions you need from the SDKs you need
-
+import { getAuth } from "firebase/auth";
+import { getDatabase } from "firebase/database";
+import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-//This sets up Firebase so all backend JS files can access the Realtime Database.
-//database is the instance used for reading and writing inventory data.
-
 // Your web app's Firebase configuration
-// Your Firebase config copied from Firebase console
 const firebaseConfig = {
   apiKey: "AIzaSyA7xaIECw1UOXaDYVza2bxJT_IMqqykSiI",
   authDomain: "neko-and-kopi.firebaseapp.com",
@@ -25,6 +19,8 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
 
-// Export Realtime Database instance for backend files to use
-export const database = getDatabase(app);
+export { auth, db };
+
