@@ -1,11 +1,13 @@
 // backend/models/LogUsage.js
 class LogUsage {
-  constructor({ id = null, item, amount, date, note = "" }) {
-    this.id = id;        // Firestore doc ID
-    this.item = item;    // string (ingredient name)
-    this.amount = amount; // string/number (e.g. "-0.5 kg")
-    this.date = date;    // string or timestamp
-    this.note = note;    // optional string
+  constructor({ id = null, itemId, itemName, amount, date, note = "" }) {
+    this.id = id;
+    this.itemId = itemId;
+    this.itemName = itemName;
+    this.amount = amount;
+    this.date = date;
+    this.note = note;
+    this.dateStr = date ? date.toISOString().split("T")[0] : null; // YYYY-MM-DD
   }
 }
 

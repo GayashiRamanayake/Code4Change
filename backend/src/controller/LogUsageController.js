@@ -1,20 +1,23 @@
-const logUsageService = require("../services/logUsageService");
+// backend/controllers/logUsageController.js
+import * as logService from "../services/logUsageService.js";
 
-exports.addLog = async (req, res) => {
+async function addLogController(req, res) {
   try {
-    const logData = req.body;
-    const newLog = await logUsageService.addLog(logData);
-    res.status(201).json(newLog);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    const log = await logService.addLog(req.body);
+    res.status(201).json(log);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
-};
+}
 
-exports.getLogs = async (req, res) => {
+async function getLogsByDateController(req, res) {
   try {
-    const logs = await logUsageService.getLogs();
-    res.status(200).json(logs);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    const dateStr = req.query.date; // 'YYYY-MM-DD'
+    const logs = await logService.getLogsByDate(dateStr);
+    res.json(logs);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
-};
+}
+
+export { addLogController, getLogsByDateController };

@@ -1,18 +1,20 @@
-// backend/repositories/logUsageRepository.js
-const { db } = require("../config/firebase");
+// backend/repository/logUsageRepository.js
+const { db } = require("../config/firebaseConfig");
 const LogUsage = require("../models/LogUsage");
 
-const collection = db.collection("logUsage");
-
-async function getAllLogs() {
-  const snapshot = await collection.get();
-  return snapshot.docs.map(doc => new LogUsage({ id: doc.id, ...doc.data() }));
-}
+const logCollection = db.collection("logUsage");
 
 async function addLog(logData) {
-  const newLog = new LogUsage(logData);
-  const docRef = await collection.add({ ...newLog });
-  return { id: docRef.id, ...newLog };
+  const docRef = await logCollection.add(logData);
+  return { id: docRef.id, ...logData };
 }
 
-module.exports = { getAllLogs, addLog };
+async function getLogsByDate(dateStr) {
+  const snapshot = await logCollection
+    .where("dateStr", "==", dateStr)
+    .orderBy("date", "desc")
+    .get();
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+}
+
+module.exports = { addLog, getLogsByDate };
