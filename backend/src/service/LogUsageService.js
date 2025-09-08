@@ -1,5 +1,5 @@
 // backend/services/logUsageService.js
-import { database } from "../config/firebase.js";
+import { database } from "../firebaseConfig";
 import { ref, push, query, orderByChild, equalTo, get } from "firebase/database";
 
 async function addLog({ itemId, itemName, amount, note }) {

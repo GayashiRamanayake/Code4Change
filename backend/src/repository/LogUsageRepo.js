@@ -1,5 +1,5 @@
 // backend/repository/logUsageRepository.js
-const { db } = require("../config/firebaseConfig");
+const { db } = require("../firebaseConfig");
 const LogUsage = require("../models/LogUsage");
 
 const logCollection = db.collection("logUsage");
