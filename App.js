@@ -1,15 +1,10 @@
-// App.js
-import React from "react";
-
-// Navigation imports
+import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack"; // ✅ Was missing
+import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
-// Icons
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-// Import your screens
+// Screens
 import LoginScreen from "./frontend/screens/LoginScreen";
 import SignUpScreen from "./frontend/screens/SignUpScreen";
 import DashboardScreen from "./frontend/screens/DashboardScreen";
@@ -22,14 +17,15 @@ import HistoryScreen from "./frontend/screens/HistoryScreen";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// Bottom Tab Navigator (Main app tabs)
+// Bottom Tab Navigator
 function MainTabs() {
   return (
     <Tab.Navigator
       screenOptions={{
-        headerShown: false, // Hide header in bottom tabs
+        headerShown: false,
         tabBarActiveTintColor: "#007AFF",
         tabBarInactiveTintColor: "gray",
+        tabBarLabelStyle: { fontSize: 12 },
       }}
     >
       <Tab.Screen
@@ -54,6 +50,7 @@ function MainTabs() {
         name="DailyUsage"
         component={DailyUsageScreen}
         options={{
+          tabBarLabel: "Daily Usage",
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="clipboard-text" size={size} color={color} />
           ),
@@ -72,24 +69,23 @@ function MainTabs() {
   );
 }
 
-// App entry point
+// App Entry
 export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {/* Initial login screen */}
+        {/* Auth flow */}
         <Stack.Screen name="Login" component={LoginScreen} />
-
-        {/* Sign Up screen */}
         <Stack.Screen name="SignUp" component={SignUpScreen} />
 
-        {/* Main bottom tabs after login */}
+        {/* Main app */}
         <Stack.Screen name="MainTabs" component={MainTabs} />
 
-        {/* History screen can be accessed via navigation */}
+        {/* Extra screens accessible from tabs */}
         <Stack.Screen name="History" component={HistoryScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+
 
