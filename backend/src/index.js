@@ -1,20 +1,28 @@
-import "dotenv/config";
+// src/index.js
+import "dotenv/config";                     // load environment variables
 import express from "express";
 import cors from "cors";
-import "./firebaseAdmin.js";                 // init Admin SDK once
+import bodyParser from "body-parser";
+
+// Import routes/controllers
+import inventoryRoutes from "./routes/InventoryRoutes.js";
 import historyRouter from "./controller/HistoryController.js";
+import "./firebaseAdmin.js";                 // initialize Firebase Admin SDK
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.use(cors());                             // allow RN app to call this
-app.use(express.json());                     // parse JSON bodies
+app.use(cors());
+app.use(bodyParser.json());
+app.use(express.json());
 
-app.get("/health", (_req, res) => res.json({ ok: true }));
-
-// mount controller directly (since you don't use /routes)
+// Mount routes
+app.use("/inventory", inventoryRoutes);
 app.use("/api/history", historyRouter);
 
-const PORT = process.env.PORT || 8080;
+// Health check endpoint
+app.get("/health", (_req, res) => res.json({ ok: true }));
+
 app.listen(PORT, () => {
-  console.log(`API listening on http://localhost:${PORT}`);
+  console.log(`Backend running on http://localhost:${PORT}`);
 });

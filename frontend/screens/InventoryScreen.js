@@ -1,23 +1,11 @@
-//useEffect fetches inventory from Firebase once on mount and updates in real-time.
-//handleAddItem sends new items to backend (addInventoryItem) and updates local state.
-//filteredData allows category filtering.
-//statusText shows "LOW" if stock is below threshold.
-//AddItemModal now directly calls backend to store items.
-
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import AddItemModal from "../components/AddItemModal";
 import DatePickerModal from "../components/DatePickerModal";
+import axios from "axios";
 
-import { db } from "../firebaseConfig"; // Firebase config for frontend
-import { ref, onValue, push, set } from "firebase/database"; // Firebase functions
+const API_URL = "https://neko-and-kopi-default-rtdb.firebaseio.com";
 
 export default function InventoryScreen({ navigation }) {
   const [inventoryList, setInventoryList] = useState([]);
@@ -27,36 +15,40 @@ export default function InventoryScreen({ navigation }) {
 
   const categories = ["All", "Coffee", "Dairy", "Sweeteners", "Other"];
 
-  // Fetch inventory from Firebase on mount and listen to changes
-  useEffect(() => {
-    const inventoryRef = ref(db, "inventory"); // Path in Firebase
-    const unsubscribe = onValue(inventoryRef, (snapshot) => {
-      const data = snapshot.val() || {};
-      const items = Object.keys(data).map((key) => ({
-        id: key,
-        ...data[key],
-      }));
-      setInventoryList(items);
-    });
+  // Fetch inventory from Firebase
+  const fetchInventory = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/inventory.json`);
+      const data = res.data ? Object.values(res.data) : [];
+      setInventoryList(data);
+    } catch (err) {
+      console.log("Error fetching inventory:", err.message);
+    }
+  };
 
-    return () => unsubscribe(); // Cleanup listener
+  useEffect(() => {
+    fetchInventory();
+    // Optional: poll every 5 seconds for real-time effect
+    const interval = setInterval(fetchInventory, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   // Add new inventory item to Firebase
   const handleAddItem = async (item) => {
-    const inventoryRef = ref(db, "inventory");
-    const newItemRef = push(inventoryRef); // Generate unique ID in Firebase
-    await set(newItemRef, item); // Save item to Firebase
-    // local state will update automatically because of onValue listener
+    try {
+      console.log("Sending item to Firebase:", item);
+      await axios.post(`${API_URL}/inventory.json`, item);
+      fetchInventory(); // Refresh list
+    } catch (err) {
+      console.log("Error adding item:", err.message);
+    }
   };
 
-  // Filter inventory based on selected category
   const filteredData =
     selectedCategory === "All"
       ? inventoryList
       : inventoryList.filter((item) => item.category === selectedCategory);
 
-  // Render each inventory item
   const renderItem = ({ item }) => (
     <View style={styles.itemCard}>
       <View style={{ flex: 1 }}>
@@ -76,11 +68,7 @@ export default function InventoryScreen({ navigation }) {
         </View>
       </View>
       <TouchableOpacity>
-        <MaterialCommunityIcons
-          name="note-edit-outline"
-          size={22}
-          color="#555"
-        />
+        <MaterialCommunityIcons name="note-edit-outline" size={22} color="#555" />
       </TouchableOpacity>
     </View>
   );
@@ -97,18 +85,11 @@ export default function InventoryScreen({ navigation }) {
 
       {/* Add and History Buttons */}
       <View style={styles.headerButtons}>
-        <TouchableOpacity
-          style={styles.historyButton}
-          onPress={() => setDateModalVisible(true)}
-        >
+        <TouchableOpacity style={styles.historyButton} onPress={() => setDateModalVisible(true)}>
           <Ionicons name="time-outline" size={14} color="#fff" />
           <Text style={styles.historyButtonText}>History</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={() => setModalVisible(true)}
-        >
+        <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
           <Ionicons name="add" size={18} color="#fff" />
           <Text style={styles.addButtonText}> Add</Text>
         </TouchableOpacity>
@@ -119,18 +100,10 @@ export default function InventoryScreen({ navigation }) {
         {categories.map((cat) => (
           <TouchableOpacity
             key={cat}
-            style={[
-              styles.categoryButton,
-              selectedCategory === cat && styles.categorySelected,
-            ]}
+            style={[styles.categoryButton, selectedCategory === cat && styles.categorySelected]}
             onPress={() => setSelectedCategory(cat)}
           >
-            <Text
-              style={[
-                styles.categoryText,
-                selectedCategory === cat && styles.categoryTextSelected,
-              ]}
-            >
+            <Text style={[styles.categoryText, selectedCategory === cat && styles.categoryTextSelected]}>
               {cat}
             </Text>
           </TouchableOpacity>
@@ -141,26 +114,18 @@ export default function InventoryScreen({ navigation }) {
       <FlatList
         data={filteredData}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={{ paddingBottom: 20 }}
       />
 
       {/* Modals */}
-      <AddItemModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        onAdd={handleAddItem} // connect AddItemModal to backend
-      />
-      <DatePickerModal
-        visible={dateModalVisible}
-        onClose={() => setDateModalVisible(false)}
-        onViewHistory={(date) => console.log("History for date:", date)}
-      />
+      <AddItemModal visible={modalVisible} onClose={() => setModalVisible(false)} onAdd={handleAddItem} />
+      <DatePickerModal visible={dateModalVisible} onClose={() => setDateModalVisible(false)} onViewHistory={(date) => console.log("History for date:", date)} />
     </View>
   );
 }
 
-// Styles (keep your previous styles)
+// Styles (keep your existing styles)
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff", padding: 16 },
   header: { flexDirection: "column", alignItems: "flex-start", width: "100%", marginBottom: 10 },
@@ -184,3 +149,5 @@ const styles = StyleSheet.create({
   statusDot: { width: 8, height: 8, borderRadius: 4, marginHorizontal: 4 },
   statusText: { fontSize: 13, color: "green" },
 });
+
+
