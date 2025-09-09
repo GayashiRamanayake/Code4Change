@@ -1,25 +1,29 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Alert } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import AddItemModal from "../components/AddItemModal";
+import EditItemModal from "../components/EditItemModal";
 import DatePickerModal from "../components/DatePickerModal";
 import axios from "axios";
 
 const API_URL = "https://neko-and-kopi-default-rtdb.firebaseio.com";
 
-export default function InventoryScreen({ navigation }) {
+export default function InventoryScreen() {
   const [inventoryList, setInventoryList] = useState([]);
+  const [categories, setCategories] = useState(["All", "Coffee", "Sweeteners", "Other"]);
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [modalVisible, setModalVisible] = useState(false);
+  const [addModalVisible, setAddModalVisible] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
   const [dateModalVisible, setDateModalVisible] = useState(false);
-
-  const categories = ["All", "Coffee", "Dairy", "Sweeteners", "Other"];
+  const [itemToEdit, setItemToEdit] = useState(null);
 
   // Fetch inventory from Firebase
   const fetchInventory = async () => {
     try {
       const res = await axios.get(`${API_URL}/inventory.json`);
-      const data = res.data ? Object.values(res.data) : [];
+      const data = res.data
+        ? Object.keys(res.data).map((key) => ({ id: key, ...res.data[key] }))
+        : [];
       setInventoryList(data);
     } catch (err) {
       console.log("Error fetching inventory:", err.message);
@@ -28,27 +32,68 @@ export default function InventoryScreen({ navigation }) {
 
   useEffect(() => {
     fetchInventory();
-    // Optional: poll every 5 seconds for real-time effect
     const interval = setInterval(fetchInventory, 5000);
     return () => clearInterval(interval);
   }, []);
 
-  // Add new inventory item to Firebase
-  const handleAddItem = async (item) => {
+  // Save item (Add or Edit)
+  const handleSaveItem = async (item) => {
     try {
-      console.log("Sending item to Firebase:", item);
-      await axios.post(`${API_URL}/inventory.json`, item);
-      fetchInventory(); // Refresh list
+      if (item.id) {
+        await axios.put(`${API_URL}/inventory/${item.id}.json`, item);
+      } else {
+        await axios.post(`${API_URL}/inventory.json`, item);
+      }
+      fetchInventory();
+      setAddModalVisible(false);
+      setEditModalVisible(false);
+      setItemToEdit(null);
     } catch (err) {
-      console.log("Error adding item:", err.message);
+      console.log("Error saving item:", err.message);
     }
   };
 
+  // Delete item
+  const handleDeleteItem = async (id) => {
+    Alert.alert("Confirm Delete", "Are you sure you want to delete this item?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            await axios.delete(`${API_URL}/inventory/${id}.json`);
+            fetchInventory();
+            setEditModalVisible(false);
+          } catch (err) {
+            console.log("Error deleting item:", err.message);
+          }
+        },
+      },
+    ]);
+  };
+
+  // Add new category
+  const addCategory = () => {
+    Alert.prompt(
+      "New Category",
+      "Enter category name:",
+      (cat) => {
+        if (cat && !categories.includes(cat)) {
+          setCategories([...categories, cat]);
+        }
+      },
+      "plain-text"
+    );
+  };
+
+  // Filter by category
   const filteredData =
     selectedCategory === "All"
       ? inventoryList
       : inventoryList.filter((item) => item.category === selectedCategory);
 
+  // Render inventory item
   const renderItem = ({ item }) => (
     <View style={styles.itemCard}>
       <View style={{ flex: 1 }}>
@@ -67,7 +112,12 @@ export default function InventoryScreen({ navigation }) {
           </Text>
         </View>
       </View>
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          setItemToEdit(item);
+          setEditModalVisible(true);
+        }}
+      >
         <MaterialCommunityIcons name="note-edit-outline" size={22} color="#555" />
       </TouchableOpacity>
     </View>
@@ -78,69 +128,103 @@ export default function InventoryScreen({ navigation }) {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Inventory Management</Text>
-        <Text style={styles.headerSubtitle}>
-          Stay updated on stock availability
-        </Text>
+        <Text style={styles.headerSubtitle}>Stay updated on stock availability</Text>
       </View>
 
-      {/* Add and History Buttons */}
+      {/* Add & History Buttons */}
       <View style={styles.headerButtons}>
-        <TouchableOpacity style={styles.historyButton} onPress={() => setDateModalVisible(true)}>
+        <TouchableOpacity
+          style={styles.historyButton}
+          onPress={() => setDateModalVisible(true)}
+        >
           <Ionicons name="time-outline" size={14} color="#fff" />
           <Text style={styles.historyButtonText}>History</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => setAddModalVisible(true)}
+        >
           <Ionicons name="add" size={18} color="#fff" />
           <Text style={styles.addButtonText}> Add</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Categories */}
+      {/* Categories Row */}
       <View style={styles.categoryRow}>
         {categories.map((cat) => (
           <TouchableOpacity
             key={cat}
-            style={[styles.categoryButton, selectedCategory === cat && styles.categorySelected]}
+            style={[
+              styles.categoryButton,
+              selectedCategory === cat && styles.categorySelected,
+            ]}
             onPress={() => setSelectedCategory(cat)}
           >
-            <Text style={[styles.categoryText, selectedCategory === cat && styles.categoryTextSelected]}>
+            <Text
+              style={[
+                styles.categoryText,
+                selectedCategory === cat && styles.categoryTextSelected,
+              ]}
+            >
               {cat}
             </Text>
           </TouchableOpacity>
         ))}
+        <TouchableOpacity style={styles.addCategoryButton} onPress={addCategory}>
+          <Ionicons name="add-circle-outline" size={22} color="#333" />
+        </TouchableOpacity>
       </View>
 
       {/* Inventory List */}
       <FlatList
         data={filteredData}
         renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(item) => item.id}
         contentContainerStyle={{ paddingBottom: 20 }}
       />
 
       {/* Modals */}
-      <AddItemModal visible={modalVisible} onClose={() => setModalVisible(false)} onAdd={handleAddItem} />
-      <DatePickerModal visible={dateModalVisible} onClose={() => setDateModalVisible(false)} onViewHistory={(date) => console.log("History for date:", date)} />
+      <AddItemModal
+        visible={addModalVisible}
+        onClose={() => setAddModalVisible(false)}
+        onSave={handleSaveItem}
+        categories={categories.filter(c => c !== "All")}
+      />
+
+      <EditItemModal
+        visible={editModalVisible}
+        onClose={() => setEditModalVisible(false)}
+        onSave={handleSaveItem}
+        onDelete={handleDeleteItem}
+        item={itemToEdit}
+        categories={categories.filter(c => c !== "All")}
+      />
+
+      <DatePickerModal
+        visible={dateModalVisible}
+        onClose={() => setDateModalVisible(false)}
+        onViewHistory={(date) => console.log("History for date:", date)}
+      />
     </View>
   );
 }
 
-// Styles (keep your existing styles)
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff", padding: 16 },
   header: { flexDirection: "column", alignItems: "flex-start", width: "100%", marginBottom: 10 },
   headerTitle: { fontSize: 18, fontWeight: "bold" },
   headerSubtitle: { fontSize: 14, color: "#666", marginTop: 4, marginBottom: 4 },
-  headerButtons: { flexDirection: "row", alignItems: "center", marginBottom: 10, justifyContent: "flex-start", marginTop: 20, marginLeft: 170 },
+  headerButtons: { flexDirection: "row", alignItems: "center", marginBottom: 10, justifyContent: "center", gap: 10, marginTop: 20 },
   addButton: { flexDirection: "row", alignItems: "center", backgroundColor: "#333", borderRadius: 20, paddingHorizontal: 12, paddingVertical: 6 },
   addButtonText: { color: "#fff", fontWeight: "bold", fontSize: 14, marginLeft: 5 },
-  historyButton: { flexDirection: "row", alignItems: "center", backgroundColor: "#4CAF50", borderRadius: 20, paddingHorizontal: 12, paddingVertical: 6, marginRight: 10 },
+  historyButton: { flexDirection: "row", alignItems: "center", backgroundColor: "#4CAF50", borderRadius: 20, paddingHorizontal: 12, paddingVertical: 6 },
   historyButtonText: { color: "#fff", fontWeight: "bold", fontSize: 14, marginLeft: 6 },
-  categoryRow: { flexDirection: "row", marginBottom: 16 },
+  categoryRow: { flexDirection: "row", marginBottom: 16, alignItems: "center" },
   categoryButton: { paddingHorizontal: 14, paddingVertical: 6, backgroundColor: "#f1f1f1", borderRadius: 20, marginRight: 8 },
   categorySelected: { backgroundColor: "#80DEEA" },
   categoryText: { color: "#555" },
   categoryTextSelected: { color: "#fff", fontWeight: "bold" },
+  addCategoryButton: { padding: 6, backgroundColor: "#f1f1f1", borderRadius: 20 },
   itemCard: { backgroundColor: "#fff", borderRadius: 10, padding: 12, marginBottom: 12, flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", borderWidth: 1, borderColor: "#eee" },
   itemName: { fontWeight: "bold", fontSize: 16 },
   itemCategory: { color: "#888", fontSize: 13 },
@@ -149,5 +233,11 @@ const styles = StyleSheet.create({
   statusDot: { width: 8, height: 8, borderRadius: 4, marginHorizontal: 4 },
   statusText: { fontSize: 13, color: "green" },
 });
+
+
+
+
+
+
 
 
