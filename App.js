@@ -9,7 +9,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 // Icons
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-// Import your screens
+// Screens
 import LoginScreen from "./frontend/screens/LoginScreen";
 import SignUpScreen from "./frontend/screens/SignUpScreen";
 import DashboardScreen from "./frontend/screens/DashboardScreen";
@@ -46,16 +46,25 @@ function MainTabs() {
         component={InventoryScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="cube-outline" size={size} color={color} />
+            <MaterialCommunityIcons
+              name="cube-outline"
+              size={size}
+              color={color}
+            />
           ),
         }}
       />
       <Tab.Screen
-        name="DailyUsage"
+        name="Daily Usage"
         component={DailyUsageScreen}
         options={{
+          tabBarLabel: "Daily Usage",
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="clipboard-text" size={size} color={color} />
+            <MaterialCommunityIcons
+              name="clipboard-text"
+              size={size}
+              color={color}
+            />
           ),
         }}
       />
@@ -64,7 +73,11 @@ function MainTabs() {
         component={ProfileScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="account" size={size} color={color} />
+            <MaterialCommunityIcons
+              name="account"
+              size={size}
+              color={color}
+            />
           ),
         }}
       />
@@ -72,15 +85,13 @@ function MainTabs() {
   );
 }
 
-// App entry point
+// App Entry
 export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {/* Initial login screen */}
         <Stack.Screen name="Login" component={LoginScreen} />
-
-        {/* Sign Up screen */}
         <Stack.Screen name="SignUp" component={SignUpScreen} />
 
         {/* Main bottom tabs after login */}
@@ -88,6 +99,7 @@ export default function App() {
 
         {/* History screen can be accessed via navigation */}
         <Stack.Screen name="History" component={HistoryScreen} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
