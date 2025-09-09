@@ -60,15 +60,15 @@ A **.NET MAUI-based mobile app** with Firebase backend that includes:
 
 ## 🧰 Tech Stack
 
-| Layer         | Technology                |
-|---------------|---------------------------|
-| Frontend      | .NET MAUI (Mobile)        |
-| Backend       | Firebase Firestore        |
-| Notifications | Firebase Cloud Messaging (FCM) |
-| Auth          | Firebase Authentication   |
-| UI Design     | Figma                     |
-| PM Tool       | ClickUp                   |
-| Version Control | GitHub                  |
+| Layer         | Technology                             |
+|---------------|---------------------------             |
+| Frontend      | React-Native Expo (Mobile Application  |
+| Backend       | Firebase Realtime Database             |
+| Notifications | Firebase Cloud Messaging (FCM)         |
+| Auth          | Firebase Authentication                |
+| UI Design     | Figma                                  |
+| PM Tool       | ClickUp                                |
+| Version Control | GitHub                               |
 
 ---
 
