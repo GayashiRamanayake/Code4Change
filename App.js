@@ -3,10 +3,8 @@ import React from "react";
 
 // Navigation imports
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack"; // ✅ Was missing
+import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
-// Icons
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 // Screens
@@ -104,4 +102,5 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
 
