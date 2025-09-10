@@ -188,8 +188,3 @@ const styles = StyleSheet.create({
   cellName:   { flex: 1, fontWeight: '600', fontSize: 15, textAlign: 'center' },
   cell:       { flex: 1, fontSize: 14, textAlign: 'center' },
 });
-
-
-
-
-
