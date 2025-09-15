@@ -4,6 +4,7 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import AddItemModal from "../components/AddItemModal";
 import EditItemModal from "../components/EditItemModal";
 import DatePickerModal from "../components/DatePickerModal";
+import AddCategoryModal from "../components/AddCategoryModal"; // Add this import
 import axios from "axios";
 
 const API_URL = "https://neko-and-kopi-default-rtdb.firebaseio.com";
@@ -15,6 +16,7 @@ export default function InventoryScreen() {
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [dateModalVisible, setDateModalVisible] = useState(false);
+  const [addCategoryModalVisible, setAddCategoryModalVisible] = useState(false); // Add this state
   const [itemToEdit, setItemToEdit] = useState(null);
 
   // Fetch inventory from Firebase
@@ -73,18 +75,9 @@ export default function InventoryScreen() {
     ]);
   };
 
-  // Add new category
-  const addCategory = () => {
-    Alert.prompt(
-      "New Category",
-      "Enter category name:",
-      (cat) => {
-        if (cat && !categories.includes(cat)) {
-          setCategories([...categories, cat]);
-        }
-      },
-      "plain-text"
-    );
+  // Add new category - Updated function
+  const handleAddCategory = (categoryName) => {
+    setCategories([...categories, categoryName]);
   };
 
   // Filter by category
@@ -170,7 +163,10 @@ export default function InventoryScreen() {
             </Text>
           </TouchableOpacity>
         ))}
-        <TouchableOpacity style={styles.addCategoryButton} onPress={addCategory}>
+        <TouchableOpacity 
+          style={styles.addCategoryButton} 
+          onPress={() => setAddCategoryModalVisible(true)} // Updated onPress
+        >
           <Ionicons name="add-circle-outline" size={22} color="#333" />
         </TouchableOpacity>
       </View>
@@ -205,6 +201,14 @@ export default function InventoryScreen() {
         onClose={() => setDateModalVisible(false)}
         onViewHistory={(date) => console.log("History for date:", date)}
       />
+
+      {/* Add Category Modal - New modal */}
+      <AddCategoryModal
+        visible={addCategoryModalVisible}
+        onClose={() => setAddCategoryModalVisible(false)}
+        onSave={handleAddCategory}
+        existingCategories={categories}
+      />
     </View>
   );
 }
@@ -233,11 +237,3 @@ const styles = StyleSheet.create({
   statusDot: { width: 8, height: 8, borderRadius: 4, marginHorizontal: 4 },
   statusText: { fontSize: 13, color: "green" },
 });
-
-
-
-
-
-
-
-
