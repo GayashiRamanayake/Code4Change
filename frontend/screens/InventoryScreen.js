@@ -4,7 +4,7 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import AddItemModal from "../components/AddItemModal";
 import EditItemModal from "../components/EditItemModal";
 import DatePickerModal from "../components/DatePickerModal";
-import AddCategoryModal from "../components/AddCategoryModal"; // Add this import
+import AddCategoryModal from "../components/AddCategoryModal";
 import axios from "axios";
 
 const API_URL = "https://neko-and-kopi-default-rtdb.firebaseio.com";
@@ -16,10 +16,9 @@ export default function InventoryScreen() {
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [dateModalVisible, setDateModalVisible] = useState(false);
-  const [addCategoryModalVisible, setAddCategoryModalVisible] = useState(false); // Add this state
+  const [addCategoryModalVisible, setAddCategoryModalVisible] = useState(false);
   const [itemToEdit, setItemToEdit] = useState(null);
 
-  // Fetch inventory from Firebase
   const fetchInventory = async () => {
     try {
       const res = await axios.get(`${API_URL}/inventory.json`);
@@ -38,7 +37,6 @@ export default function InventoryScreen() {
     return () => clearInterval(interval);
   }, []);
 
-  // Save item (Add or Edit)
   const handleSaveItem = async (item) => {
     try {
       if (item.id) {
@@ -55,7 +53,6 @@ export default function InventoryScreen() {
     }
   };
 
-  // Delete item
   const handleDeleteItem = async (id) => {
     Alert.alert("Confirm Delete", "Are you sure you want to delete this item?", [
       { text: "Cancel", style: "cancel" },
@@ -75,18 +72,15 @@ export default function InventoryScreen() {
     ]);
   };
 
-  // Add new category - Updated function
   const handleAddCategory = (categoryName) => {
     setCategories([...categories, categoryName]);
   };
 
-  // Filter by category
   const filteredData =
     selectedCategory === "All"
       ? inventoryList
       : inventoryList.filter((item) => item.category === selectedCategory);
 
-  // Render inventory item
   const renderItem = ({ item }) => (
     <View style={styles.itemCard}>
       <View style={{ flex: 1 }}>
@@ -97,7 +91,7 @@ export default function InventoryScreen() {
           <View
             style={[
               styles.statusDot,
-              { backgroundColor: item.stock <= item.threshold ? "red" : "green" },
+              { backgroundColor: item.stock <= item.threshold ? "#D32F2F" : "#4CAF50" },
             ]}
           />
           <Text style={styles.statusText}>
@@ -111,7 +105,7 @@ export default function InventoryScreen() {
           setEditModalVisible(true);
         }}
       >
-        <MaterialCommunityIcons name="note-edit-outline" size={22} color="#555" />
+        <MaterialCommunityIcons name="note-edit-outline" size={22} color="#64B5F6" />
       </TouchableOpacity>
     </View>
   );
@@ -124,7 +118,7 @@ export default function InventoryScreen() {
         <Text style={styles.headerSubtitle}>Stay updated on stock availability</Text>
       </View>
 
-      {/* Add & History Buttons */}
+      {/* Buttons */}
       <View style={styles.headerButtons}>
         <TouchableOpacity
           style={styles.historyButton}
@@ -142,7 +136,7 @@ export default function InventoryScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Categories Row */}
+      {/* Categories */}
       <View style={styles.categoryRow}>
         {categories.map((cat) => (
           <TouchableOpacity
@@ -163,11 +157,11 @@ export default function InventoryScreen() {
             </Text>
           </TouchableOpacity>
         ))}
-        <TouchableOpacity 
-          style={styles.addCategoryButton} 
-          onPress={() => setAddCategoryModalVisible(true)} // Updated onPress
+        <TouchableOpacity
+          style={styles.addCategoryButton}
+          onPress={() => setAddCategoryModalVisible(true)}
         >
-          <Ionicons name="add-circle-outline" size={22} color="#333" />
+          <Ionicons name="add-circle-outline" size={22} color="#64B5F6" />
         </TouchableOpacity>
       </View>
 
@@ -184,7 +178,7 @@ export default function InventoryScreen() {
         visible={addModalVisible}
         onClose={() => setAddModalVisible(false)}
         onSave={handleSaveItem}
-        categories={categories.filter(c => c !== "All")}
+        categories={categories.filter((c) => c !== "All")}
       />
 
       <EditItemModal
@@ -193,7 +187,7 @@ export default function InventoryScreen() {
         onSave={handleSaveItem}
         onDelete={handleDeleteItem}
         item={itemToEdit}
-        categories={categories.filter(c => c !== "All")}
+        categories={categories.filter((c) => c !== "All")}
       />
 
       <DatePickerModal
@@ -202,7 +196,6 @@ export default function InventoryScreen() {
         onViewHistory={(date) => console.log("History for date:", date)}
       />
 
-      {/* Add Category Modal - New modal */}
       <AddCategoryModal
         visible={addCategoryModalVisible}
         onClose={() => setAddCategoryModalVisible(false)}
@@ -214,26 +207,67 @@ export default function InventoryScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff", padding: 16 },
-  header: { flexDirection: "column", alignItems: "flex-start", width: "100%", marginBottom: 10 },
-  headerTitle: { fontSize: 18, fontWeight: "bold" },
-  headerSubtitle: { fontSize: 14, color: "#666", marginTop: 4, marginBottom: 4 },
-  headerButtons: { flexDirection: "row", alignItems: "center", marginBottom: 10, justifyContent: "center", gap: 10, marginTop: 20 },
-  addButton: { flexDirection: "row", alignItems: "center", backgroundColor: "#333", borderRadius: 20, paddingHorizontal: 12, paddingVertical: 6 },
-  addButtonText: { color: "#fff", fontWeight: "bold", fontSize: 14, marginLeft: 5 },
-  historyButton: { flexDirection: "row", alignItems: "center", backgroundColor: "#4CAF50", borderRadius: 20, paddingHorizontal: 12, paddingVertical: 6 },
+  container: { flex: 1, backgroundColor: "#D0E6FA", padding: 16 }, // Light blue background
+  header: { marginBottom: 10 },
+  headerTitle: { fontSize: 20, fontWeight: "bold", color: "#0D1B2A" }, // Dark blue text
+  headerSubtitle: { fontSize: 14, color: "#0D1B2A", marginTop: 4 },
+  headerButtons: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginVertical: 20,
+    gap: 12,
+  },
+  addButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#1E88E5",
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+  },
+  addButtonText: { color: "#fff", fontWeight: "bold", fontSize: 14 },
+  historyButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#1976D2",
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+  },
   historyButtonText: { color: "#fff", fontWeight: "bold", fontSize: 14, marginLeft: 6 },
-  categoryRow: { flexDirection: "row", marginBottom: 16, alignItems: "center" },
-  categoryButton: { paddingHorizontal: 14, paddingVertical: 6, backgroundColor: "#f1f1f1", borderRadius: 20, marginRight: 8 },
-  categorySelected: { backgroundColor: "#80DEEA" },
-  categoryText: { color: "#555" },
+  categoryRow: { flexDirection: "row", marginBottom: 16, alignItems: "center", flexWrap: "wrap" },
+  categoryButton: {
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    backgroundColor: "#A9CCE3", // Slightly darker blue for buttons
+    borderRadius: 20,
+    marginRight: 8,
+    marginBottom: 8,
+  },
+  categorySelected: { backgroundColor: "#1E88E5" },
+  categoryText: { color: "#0D1B2A" },
   categoryTextSelected: { color: "#fff", fontWeight: "bold" },
-  addCategoryButton: { padding: 6, backgroundColor: "#f1f1f1", borderRadius: 20 },
-  itemCard: { backgroundColor: "#fff", borderRadius: 10, padding: 12, marginBottom: 12, flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", borderWidth: 1, borderColor: "#eee" },
-  itemName: { fontWeight: "bold", fontSize: 16 },
-  itemCategory: { color: "#888", fontSize: 13 },
+  addCategoryButton: { padding: 6 },
+  itemCard: {
+    backgroundColor: "#FFFFFF", // White cards on light blue
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 12,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    borderWidth: 1,
+    borderColor: "#B0C4DE", // Light border
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  itemName: { fontWeight: "bold", fontSize: 16, color: "#0D1B2A" },
+  itemCategory: { color: "#0D1B2A", fontSize: 13 },
   row: { flexDirection: "row", alignItems: "center", marginVertical: 4 },
-  itemQuantity: { fontSize: 15, marginRight: 6 },
+  itemQuantity: { fontSize: 15, marginRight: 6, color: "#0D1B2A" },
   statusDot: { width: 8, height: 8, borderRadius: 4, marginHorizontal: 4 },
-  statusText: { fontSize: 13, color: "green" },
+  statusText: { fontSize: 13, color: "#0D1B2A" },
 });
