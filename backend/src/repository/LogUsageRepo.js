@@ -18,3 +18,5 @@ async function getLogsByDate(dateStr) {
 }
 
 module.exports = { addLog, getLogsByDate };
+
+

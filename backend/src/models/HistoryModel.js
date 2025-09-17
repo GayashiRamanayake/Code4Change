@@ -1,28 +1,46 @@
-// Very light validation; no extra libs to keep it simple.
-export function validateHistoryInput(payload) {
-  const errors = [];
-  const required = ["date", "name", "category", "stock", "usage", "value"];
+// HISTORYMODEL.JS
+// ------------------------------------------------------------
+// Data model for inventory history records.
+// Defines the structure of history data stored in Firebase.
 
-  for (const k of required) {
-    if (payload[k] === undefined || payload[k] === null || payload[k] === "") {
-      errors.push(`${k} is required`);
-    }
+class HistoryModel {
+  constructor(data = {}) {
+    this.id = data.id || null;
+    this.name = data.name || '';
+    this.category = data.category || '';
+    this.stock = data.stock || '';
+    this.value = data.value || '';
+    this.usage = data.usage || '';
+    this.lastUpdated = data.lastUpdated || '';
+    this.timestamp = data.timestamp || Date.now();
   }
 
-  if (payload.date && !/^\d{4}-\d{2}-\d{2}$/.test(payload.date)) {
-    errors.push("date must be in YYYY-MM-DD format");
+  // Convert to plain object for Firebase storage
+  toObject() {
+    return {
+      id: this.id,
+      name: this.name,
+      category: this.category,
+      stock: this.stock,
+      value: this.value,
+      usage: this.usage,
+      lastUpdated: this.lastUpdated,
+      timestamp: this.timestamp
+    };
   }
 
-  return { ok: errors.length === 0, errors };
+  // Create from Firebase data
+  static fromObject(obj, id = null) {
+    return new HistoryModel({
+      id: id || obj.id,
+      ...obj
+    });
+  }
+
+  // Validation method
+  isValid() {
+    return this.name && this.category && this.stock && this.lastUpdated;
+  }
 }
 
-export function toHistoryRecord(payload) {
-  return {
-    name: String(payload.name),
-    category: String(payload.category),
-    stock: String(payload.stock),
-    usage: String(payload.usage),
-    value: String(payload.value),
-    lastUpdated: payload.date,
-  };
-}
+module.exports = HistoryModel;
