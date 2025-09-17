@@ -30,3 +30,5 @@ async function getLogsByDate(dateStr) {
 }
 
 export { addLog, getLogsByDate };
+
+

@@ -51,7 +51,7 @@ const LoginScreen = ({ navigation }) => {
         secureTextEntry
       />
 
-      {/* Button */}
+      {/* Sign In Button */}
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Sign In</Text>
       </TouchableOpacity>
@@ -88,7 +88,7 @@ export default LoginScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#E1F5FE",
+    backgroundColor: "#E1F5FE", // light background blue
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#0288D1",
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 10,
+    borderRadius: 12,
     marginBottom: 10,
     shadowColor: "#000",
     shadowOpacity: 0.2,
@@ -162,9 +162,9 @@ const styles = StyleSheet.create({
   buttonText: { color: "#fff", fontSize: 18, fontWeight: "600" },
   link: { color: "#0277BD", marginBottom: 20, fontSize: 14 },
   demoBox: {
-    backgroundColor: "#E8F5E9",
+    backgroundColor: "#B3E5FC",
     padding: 15,
-    borderRadius: 8,
+    borderRadius: 12,
     width: "100%",
     marginBottom: 20,
     alignItems: "center",
