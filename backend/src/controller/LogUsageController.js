@@ -1,6 +1,7 @@
-// backend/controllers/logUsageController.js
 import * as logService from "../services/logUsageService.js";
 
+// Controller for adding a usage log
+// Handles request, calls service layer, and sends response
 async function addLogController(req, res) {
   try {
     const log = await logService.addLog(req.body);
@@ -10,9 +11,11 @@ async function addLogController(req, res) {
   }
 }
 
+// Controller for fetching logs by date
+// Extracts date from query params and delegates to service
 async function getLogsByDateController(req, res) {
   try {
-    const dateStr = req.query.date; // 'YYYY-MM-DD'
+    const dateStr = req.query.date;
     const logs = await logService.getLogsByDate(dateStr);
     res.json(logs);
   } catch (err) {
@@ -21,5 +24,3 @@ async function getLogsByDateController(req, res) {
 }
 
 export { addLogController, getLogsByDateController };
-
-

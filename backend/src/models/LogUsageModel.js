@@ -1,30 +1,49 @@
 import React, { useEffect, useState } from "react";
-import { Modal, View, Text, TouchableOpacity, TextInput, StyleSheet } from "react-native";
+import { Modal, View, Text, TouchableOpacity, TextInput, StyleSheet, Alert } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 
 export default function LogUsageModal({ visible, onClose, inventoryItems, onSubmit }) {
+  // Local state for selected item, usage amount, and note
   const [selectedItemId, setSelectedItemId] = useState("");
   const [amount, setAmount] = useState("");
   const [note, setNote] = useState("");
 
+  // Auto-select first inventory item when modal opens
   useEffect(() => {
-    // default to first item when list arrives
     if (inventoryItems?.length && !selectedItemId) {
       setSelectedItemId(inventoryItems[0].id);
     }
   }, [inventoryItems]);
 
-  const handleAdd = () => {
+  // Handle adding a usage entry
+  const handleAdd = async () => {
     const item = inventoryItems.find((i) => i.id === selectedItemId);
     if (!item || !amount.trim()) return;
-    onSubmit({
-      itemId: item.id,
-      itemName: item.name,
-      amount: amount.trim(),
-      note,
-    });
-    setAmount("");
-    setNote("");
+
+    try {
+      // Call parent-provided submit function (backend interaction)
+      const log = await onSubmit({
+        itemId: item.id,
+        itemName: item.name,
+        amount: amount.trim(),
+        note,
+      });
+
+      // If stock is below threshold, alert the user
+      if (log.lowStock) {
+        Alert.alert(
+          "⚠️ Low Stock Warning",
+          `${item.name} has reached the threshold!\nRemaining: ${log.remaining}, Threshold: ${log.threshold}`
+        );
+      }
+
+      // Reset form fields after submission
+      setAmount("");
+      setNote("");
+      onClose();
+    } catch (err) {
+      Alert.alert("Error", err.message);
+    }
   };
 
   return (
@@ -33,18 +52,17 @@ export default function LogUsageModal({ visible, onClose, inventoryItems, onSubm
         <View style={styles.sheet}>
           <Text style={styles.title}>Add Usage</Text>
 
+          {/* Item Dropdown */}
           <Text style={styles.label}>Item</Text>
           <View style={styles.pickerWrap}>
-            <Picker
-              selectedValue={selectedItemId}
-              onValueChange={(v) => setSelectedItemId(v)}
-            >
+            <Picker selectedValue={selectedItemId} onValueChange={(v) => setSelectedItemId(v)}>
               {inventoryItems.map((i) => (
                 <Picker.Item key={i.id} label={i.name} value={i.id} />
               ))}
             </Picker>
           </View>
 
+          {/* Usage Amount */}
           <Text style={styles.label}>Amount</Text>
           <TextInput
             placeholder="e.g. 0.5"
@@ -54,6 +72,7 @@ export default function LogUsageModal({ visible, onClose, inventoryItems, onSubm
             style={styles.input}
           />
 
+          {/* Optional Note */}
           <Text style={styles.label}>Note (optional)</Text>
           <TextInput
             placeholder="Morning batch"
@@ -62,6 +81,7 @@ export default function LogUsageModal({ visible, onClose, inventoryItems, onSubm
             style={styles.input}
           />
 
+          {/* Buttons Row */}
           <View style={styles.row}>
             <TouchableOpacity style={[styles.btn, styles.dark]} onPress={handleAdd}>
               <Text style={styles.btnText}>Add</Text>
@@ -89,5 +109,3 @@ const styles = StyleSheet.create({
   gray: { backgroundColor: "#999" },
   btnText: { color: "#fff", fontWeight: "700" },
 });
-
-
