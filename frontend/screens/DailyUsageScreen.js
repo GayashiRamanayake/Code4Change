@@ -45,7 +45,6 @@ export default function DailyUsageScreen() {
         }
         const raw = snap.val();
         const list = Object.entries(raw).map(([id, v]) => {
-          // Use top-level stock if exists, else fallback to latest history
           let currentStock = typeof v?.stock === "number"
             ? v.stock
             : v?.history
@@ -111,16 +110,11 @@ export default function DailyUsageScreen() {
     };
 
     try {
-      // 1. Add usage log
       await push(ref(db, "logUsage"), payload);
-
-      // 2. Update stock
       const item = inventoryItems.find((i) => i.id === itemId);
       if (item) {
         const newStock = (item.stock ?? 0) - numeric;
         await update(ref(db, `inventory/${itemId}`), { stock: newStock });
-
-        // 3. Check threshold
         if (newStock <= item.threshold) {
           Alert.alert(
             "Low Stock Warning 🚨",
@@ -150,7 +144,10 @@ export default function DailyUsageScreen() {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Daily Usage</Text>
+        <View style={{ flexDirection: "column", flex: 1 }}>
+          <Text style={styles.headerTitle}>Daily Usage</Text>
+          <Text style={styles.headerSubtitle}>Track daily inventory consumption</Text>
+        </View>
         <TouchableOpacity
           style={styles.addButton}
           onPress={() => setModalVisible(true)}
@@ -190,7 +187,6 @@ export default function DailyUsageScreen() {
           <Text style={styles.statLabel}>Entries Today</Text>
         </View>
       </View>
-      
 
       {/* List */}
       <Text style={styles.sectionTitle}>Recent Usage Entries</Text>
@@ -224,9 +220,10 @@ export default function DailyUsageScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#e6f0ff", padding: 16 },
   header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 15 },
-  headerTitle: { fontSize: 22, fontWeight: "bold", color: "#0D1B2A" },
-  addButton: { backgroundColor: "#0047ab", borderRadius: 24, padding: 8, elevation: 3, marginRight:20, },
-  headerImage: {width: 120 ,height: 120, /*marginTop: 10,*/alignSelf:"flex-end"},
+  headerTitle: { fontSize: 22, fontWeight: "bold", color: "#0D1B2A", marginTop: 20 },
+  headerSubtitle: { fontSize: 14, color: "#0D1B2A", marginTop: 2 },
+  addButton: { backgroundColor: "#0047ab", borderRadius: 24, padding: 8, elevation: 3, marginLeft: 10 },
+  headerImage: { width: 120, height: 120, marginLeft:252 },
 
   statsRow: { flexDirection: "row", justifyContent: "space-between", marginTop: 16, marginBottom: 12 },
   statCard: {
@@ -259,11 +256,9 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
-
   usageRow: { flexDirection: "row", justifyContent: "space-between" },
   usageItem: { fontSize: 16, fontWeight: "600", color: "#0047ab" },
   usageAmount: { fontSize: 16, fontWeight: "600", color: "#0047ab" },
   usageDate: { fontSize: 12, color: "#0047ab", marginTop: 4 },
   usageNote: { fontSize: 13, color: "#0047ab", fontStyle: "italic", marginTop: 4 },
-  
 });
