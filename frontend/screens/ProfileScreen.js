@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Switch,
+  Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -92,30 +93,18 @@ export default function ProfileScreen({ navigation }) {
         <Text style={styles.logoutText}>Logout</Text>
       </TouchableOpacity>
 
-      {/* Usage Statistics */}
-      <Text style={styles.sectionTitle}>Usage Statistics</Text>
-      <View style={styles.statsContainer}>
-        <View style={styles.statBox}>
-          <Text style={styles.statValue}>156</Text>
-          <Text style={styles.statLabel}>Entries This Month</Text>
-        </View>
-        <View style={styles.statBox}>
-          <Text style={styles.statValue}>23</Text>
-          <Text style={styles.statLabel}>Active Ingredients</Text>
-        </View>
-        <View style={styles.statBox}>
-          <Text style={styles.statValue}>4.8</Text>
-          <Text style={styles.statLabel}>Avg Quality Score</Text>
-        </View>
-        <View style={styles.statBox}>
-          <Text style={styles.statValue}>95%</Text>
-          <Text style={styles.statLabel}>Stock Accuracy</Text>
-        </View>
-      </View>
+      {/* Cute Cat Illustration */}
+      <View style={styles.catContainer}>
+        <Image
+  source={require("../../assets/images/catcute.jpg")}
+  style={styles.catImage}
+  resizeMode="contain"
+/>
 
-      <Text style={styles.footerText}>
-        Streamlining café operations one ingredient at a time
-      </Text>
+        <Text style={styles.footerText}>
+          {"🐾 Serving smiles, one paw at a time 🐾"}
+        </Text>
+      </View>
     </ScrollView>
   );
 }
@@ -166,20 +155,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   logoutText: { color: "#fff", fontWeight: "bold", marginLeft: 6 },
-  statsContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-  },
-  statBox: {
-    backgroundColor: "#f9f9f9",
-    borderRadius: 10,
-    padding: 16,
-    width: "47%",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  statValue: { fontSize: 18, fontWeight: "bold" },
-  statLabel: { fontSize: 12, color: "#666", textAlign: "center" },
-  footerText: { fontSize: 12, color: "#777", textAlign: "center", marginTop: 10 },
+  catContainer: { alignItems: "center", marginTop: 10 },
+  catImage: { width: 140, height: 140, marginBottom: 8 },
+  footerText: { fontSize: 13, color: "#777", textAlign: "center" },
 });

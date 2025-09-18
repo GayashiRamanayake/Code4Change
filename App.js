@@ -8,6 +8,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 // Screens
+import SplashScreen from "./frontend/screens/SplashScreen";
 import LoginScreen from "./frontend/screens/LoginScreen";
 import SignUpScreen from "./frontend/screens/SignUpScreen";
 import DashboardScreen from "./frontend/screens/DashboardScreen";
@@ -25,7 +26,7 @@ function MainTabs() {
   return (
     <Tab.Navigator
       screenOptions={{
-        headerShown: false, // Hide header in bottom tabs
+        headerShown: false, 
         tabBarActiveTintColor: "#007AFF",
         tabBarInactiveTintColor: "gray",
       }}
@@ -88,19 +89,23 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {/* Initial login screen */}
+        {/* Splash screen first */}
+        <Stack.Screen name="Splash" component={SplashScreen} />
+
+        {/* Login & SignUp */}
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
 
-        {/* Main bottom tabs after login */}
+        {/* Main bottom tabs */}
         <Stack.Screen name="MainTabs" component={MainTabs} />
 
         {/* History screen can be accessed via navigation */}
-        <Stack.Screen name="History" component={HistoryScreen} />
-
+        <Stack.Screen name="History" component={HistoryScreen} 
+        options={{ headerShown: true, title: "Inventory History" }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+
 
 
