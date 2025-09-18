@@ -54,7 +54,7 @@ export default function InventoryScreen() {
     if (filterFromDashboard) setSelectedCategory("All");
   }, [filterFromDashboard]);
 
-  const handleSaveItem = async (item) => {
+  /*const handleSaveItem = async (item) => {
   try {
     const today = new Date().toISOString().split("T")[0];
 
@@ -88,7 +88,49 @@ export default function InventoryScreen() {
   } catch (err) {
     console.log("Error saving item:", err.message);
   }
+};*/
+
+  const handleSaveItem = async (item) => {
+  try {
+    const today = new Date().toISOString().split("T")[0];
+
+    if (item.id) {
+      // Existing item — fetch current data first
+      const res = await axios.get(`${API_URL}/inventory/${item.id}.json`);
+      const currentItem = res.data;
+
+      const stockBefore = currentItem.stock; // stock at start of day
+      const stockUsed = stockBefore - item.stock; // calculate usage
+
+      const updatedItem = {
+        ...currentItem,
+        ...item,
+        updatedAt: today,
+        history: currentItem.history
+          ? [...currentItem.history, { date: today, stockBefore, stockUsed, stock: item.stock }]
+          : [{ date: today, stockBefore, stockUsed, stock: item.stock }]
+      };
+
+      await axios.put(`${API_URL}/inventory/${item.id}.json`, updatedItem);
+    } else {
+      // New item — first history entry
+      const newItem = {
+        ...item,
+        updatedAt: today,
+        history: [{ date: today, stockBefore: 0, stockUsed: 0, stock: item.stock }]
+      };
+      await axios.post(`${API_URL}/inventory.json`, newItem);
+    }
+
+    fetchInventory();
+    setAddModalVisible(false);
+    setEditModalVisible(false);
+    setItemToEdit(null);
+  } catch (err) {
+    console.log("Error saving item:", err.message);
+  }
 };
+
 
 
   const handleDeleteItem = async (id) => {

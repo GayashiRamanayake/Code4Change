@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react"; 
 import {
   View,
   Text,
@@ -43,13 +43,22 @@ export default function DailyUsageScreen() {
           return;
         }
         const raw = snap.val();
-        const list = Object.entries(raw).map(([id, v]) => ({
-          id,
-          name: v?.name ?? id,
-          stock: typeof v?.stock === "number" ? v.stock : Number(v?.stock ?? 0),
-          unit: v?.unit ?? "",
-          threshold: typeof v?.threshold === "number" ? v.threshold : Number(v?.threshold ?? 0),
-        }));
+        const list = Object.entries(raw).map(([id, v]) => {
+          // Use top-level stock if exists, else fallback to latest history
+          let currentStock = typeof v?.stock === "number"
+            ? v.stock
+            : v?.history
+            ? Object.values(v.history).slice(-1)[0]?.stock ?? 0
+            : 0;
+
+          return {
+            id,
+            name: v?.name ?? id,
+            stock: currentStock,
+            unit: v?.unit ?? "",
+            threshold: typeof v?.threshold === "number" ? v.threshold : Number(v?.threshold ?? 0),
+          };
+        });
         setInventoryItems(list);
         setAvailableCount(list.filter((i) => (i.stock ?? 0) > 0).length);
       },
@@ -221,21 +230,21 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 4,
     elevation: 3,
-    backgroundColor: "#cfe2ff", // pastel blue
+    backgroundColor: "#cfe2ff",
   },
-  blueCard: { backgroundColor: "#cfe2ff" },  // all stats use same pastel blue
+  blueCard: { backgroundColor: "#cfe2ff" },
   greenCard: { backgroundColor: "#cfe2ff" },
   orangeCard: { backgroundColor: "#cfe2ff" },
   statValue: { fontSize: 16, fontWeight: "700", color: "#0047ab", marginTop: 4 },
   statLabel: { fontSize: 12, color: "#0047ab", textAlign: "center", marginTop: 2 },
   sectionTitle: { fontSize: 18, fontWeight: "bold", marginBottom: 10, color: "#0047ab" },
   usageCard: {
-    backgroundColor: "#cfe2ff",  // pastel blue
+    backgroundColor: "#cfe2ff",
     padding: 14,
     borderRadius: 12,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: "#a1c4ff", // slightly darker blue border for contrast
+    borderColor: "#a1c4ff",
     shadowColor: "#000",
     shadowOpacity: 0.05,
     shadowRadius: 4,
@@ -243,7 +252,7 @@ const styles = StyleSheet.create({
   },
   usageRow: { flexDirection: "row", justifyContent: "space-between" },
   usageItem: { fontSize: 16, fontWeight: "600", color: "#0047ab" },
-  usageAmount: { fontSize: 16, fontWeight: "600", color: "#0047ab" }, // match pastel blue theme
+  usageAmount: { fontSize: 16, fontWeight: "600", color: "#0047ab" },
   usageDate: { fontSize: 12, color: "#0047ab", marginTop: 4 },
   usageNote: { fontSize: 13, color: "#0047ab", fontStyle: "italic", marginTop: 4 },
 });

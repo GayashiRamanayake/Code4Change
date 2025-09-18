@@ -33,6 +33,24 @@ export const getInventory = async (req, res) => {
   }
 };
 
+export const getInventoryHistory = async (req, res) => {
+  try {
+    const { date } = req.query; // /inventory/history?date=2025-09-18
+    const allItems = await InventoryService.getAllInventory();
+
+    const history = allItems.map(item => {
+      const entry = item.history?.find(h => h.date === date);
+      return entry ? { ...item, ...entry } : null;
+    }).filter(Boolean);
+
+    res.json(history);
+  } catch (err) {
+    console.error("Failed to fetch inventory history:", err);
+    res.status(500).json({ error: "Failed to fetch inventory history" });
+  }
+};
+
+
 
 
 

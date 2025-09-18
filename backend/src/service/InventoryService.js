@@ -1,4 +1,4 @@
-import * as InventoryRepo from "../repository/InventoryRepo.js";
+/*import * as InventoryRepo from "../repository/InventoryRepo.js";
 
 export const addInventory = async (item) => {
   return await InventoryRepo.addInventoryItem(item);
@@ -17,7 +17,22 @@ export const updateInventory = async (id, item) => {
 
 export const getAllInventory = async () => {
   return await InventoryRepo.getAllInventory();
+};*/
+
+import * as InventoryRepo from "../repository/InventoryRepo.js";
+
+export const addInventory = async (item) => {
+  return await InventoryRepo.addInventoryItem(item);
 };
+
+export const updateInventory = async (id, item) => {
+  return await InventoryRepo.updateInventoryItem(id, item);
+};
+
+export const getAllInventory = async () => {
+  return await InventoryRepo.getAllInventory();
+};
+
 
 
 
