@@ -96,24 +96,25 @@ export default function HistoryScreen({ route }) {
         data={historyData}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
+        ListFooterComponent={
+          historyData.length > 0 ? (
+            <View style={styles.totalsRow}>
+              <Text style={styles.totalsCell}>Totals</Text>
+              <Text style={styles.totalsCell}></Text>
+              <Text style={styles.totalsCell}>{totalStockBefore}</Text>
+              <Text style={styles.totalsCell}>{totalStockUsed}</Text>
+              <Text style={styles.totalsCell}>{totalStockAfter}</Text>
+              <Text style={styles.totalsCell}></Text>
+            </View>
+          ) : null
+        }
       />
-
-      {historyData.length > 0 && (
-        <View style={styles.totalsRow}>
-          <Text style={styles.totalsCell}>Totals</Text>
-          <Text style={styles.totalsCell}></Text>
-          <Text style={styles.totalsCell}>{totalStockBefore}</Text>
-          <Text style={styles.totalsCell}>{totalStockUsed}</Text>
-          <Text style={styles.totalsCell}>{totalStockAfter}</Text>
-          <Text style={styles.totalsCell}></Text>
-        </View>
-      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, backgroundColor: "#D0E6FA" },
+  container: { flex: 1, padding: 16, backgroundColor: "#D0E6FA", marginLeft:5, marginRight:5 },
   title: { fontSize: 18, fontWeight: "bold", marginBottom: 12, color: "#0D1B2A" },
   headerRow: {
     flexDirection: "row",
@@ -122,14 +123,23 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   headerCell: { flex: 1, fontWeight: "bold", fontSize: 12, color: "#0D1B2A" },
-  row: { flexDirection: "row", paddingVertical: 8, borderBottomWidth: 1, borderColor: "#ccc" },
+  row: {
+    flexDirection: "row",
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderColor: "#ccc",
+  },
   cell: { flex: 1, fontSize: 12, color: "#0D1B2A" },
   totalsRow: {
     flexDirection: "row",
     paddingVertical: 8,
     borderTopWidth: 2,
     borderColor: "#333",
-    marginTop: 8,
+    marginTop: 2, // closer to last row
   },
-  totalsCell: { flex: 1, fontWeight: "bold", color: "#0D1B2A" },
+  totalsCell: {
+    flex: 1,
+    fontWeight: "bold",
+    color: "#0D1B2A",
+  },
 });
