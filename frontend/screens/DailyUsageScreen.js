@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
+import { Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { db } from "../firebaseConfig";
 import {
@@ -157,6 +158,11 @@ export default function DailyUsageScreen() {
           <Ionicons name="add" size={24} color="#fff" />
         </TouchableOpacity>
       </View>
+      <Image 
+        source={require('../../assets/images/DailyUsageCat.png')} 
+        style={styles.headerImage}
+        resizeMode="contain"
+      />
 
       {/* Stats Row */}
       <View style={styles.statsRow}>
@@ -218,7 +224,9 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#e6f0ff", padding: 16 },
   header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 15 },
   headerTitle: { fontSize: 22, fontWeight: "bold", color: "#0047ab" },
-  addButton: { backgroundColor: "#0047ab", borderRadius: 24, padding: 8, elevation: 3 },
+  addButton: { backgroundColor: "#0047ab", borderRadius: 24, padding: 8, elevation: 3, marginRight:20, },
+  headerImage: {width: 120 ,height: 120, /*marginTop: 10,*/alignSelf:"flex-end"},
+
   statsRow: { flexDirection: "row", justifyContent: "space-between", marginTop: 16, marginBottom: 12 },
   statCard: {
     flex: 1,
