@@ -254,7 +254,7 @@ const LoginScreen = ({ navigation }) => {
       </View>
 
       <Text style={styles.title}>Neko & Kopi</Text>
-      <Text style={styles.subtitle}>Inventory Management</Text>
+      <Text style={styles.subtitle}>Inventory</Text>
 
       <TextInput
         style={styles.input}
@@ -278,7 +278,18 @@ const LoginScreen = ({ navigation }) => {
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Sign In</Text>
       </TouchableOpacity>
+       
+      {/* Forgot Password 
+      <Text style={styles.link}>Forgot Password?</Text>*/}
 
+      {/* Demo Credentials */}
+      <View style={styles.demoBox}>
+        <Text style={styles.demoTitle}>Demo Credentials</Text>
+        <Text>Email: manager@nekokopi.com</Text>
+        <Text>Password: password</Text>
+      </View>
+
+      {/* Sign Up Link */}
       <Text style={styles.footerText}>
         Don’t have an account?{" "}
         <Text

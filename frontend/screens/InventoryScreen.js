@@ -198,7 +198,7 @@ export default function InventoryScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
+      <View style={styles.headerBar}>
         <Text style={styles.headerTitle}>Inventory Management</Text>
         <Text style={styles.headerSubtitle}>Stay updated on stock availability</Text>
       </View>
@@ -301,10 +301,10 @@ export default function InventoryScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#D0E6FA", padding: 16 },
-  header: { marginBottom: 10,  marginTop: 15 },
-  headerTitle: { fontSize: 20, fontWeight: "bold", color: "#0D1B2A" },
-  headerSubtitle: { fontSize: 14, color: "#0D1B2A", marginTop: 4 },
+  container: { flex: 1, backgroundColor: "#D0E6FA", padding: 16, marginHorizontal: 2 },
+  header: { marginBottom: 10,  marginTop: 30 },
+  headerTitle: { fontSize: 20, fontWeight: "bold", color: "#0D1B2A", marginTop:30, marginBottom:1 },
+  headerSubtitle: { fontSize: 14, color: "#0D1B2A", marginTop: 4, marginBottom:20 },
   summaryContainer: { flexDirection: "row", justifyContent: "space-between", marginBottom: 16 },
   summaryCard: { flex: 1, backgroundColor: "#FFFFFF", borderRadius: 12, padding: 16, marginHorizontal: 6, alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: "#B0C4DE" },
   summaryNumber: { fontSize: 20, fontWeight: "bold", color: "#0D1B2A" },
@@ -313,10 +313,12 @@ const styles = StyleSheet.create({
   imageButton: { 
     alignItems: "center", 
     justifyContent: "center",
+    
   },
   buttonImage: {
-    width: 150,
-    height: 100 
+    width: 155,
+    height: 100,
+    
   },
   categoryRow: { flexDirection: "row", marginBottom: 16, alignItems: "center", flexWrap: "wrap" },
   categoryButton: { paddingHorizontal: 14, paddingVertical: 6, backgroundColor: "#A9CCE3", borderRadius: 20, marginRight: 8, marginBottom: 8 },
