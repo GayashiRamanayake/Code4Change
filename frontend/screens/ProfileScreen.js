@@ -96,7 +96,7 @@ export default function ProfileScreen({ navigation }) {
       {/* Cute Cat Illustration */}
       <View style={styles.catContainer}>
         <Image
-  source={require("../../assets/images/catcute.jpg")}
+  source={require("../../assets/images/catcute.png")}
   style={styles.catImage}
   resizeMode="contain"
 />

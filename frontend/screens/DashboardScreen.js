@@ -290,6 +290,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#D0E6FA',
+    padding: 18, // slightly thicker overall padding
   },
 
   centered: {
@@ -305,15 +306,15 @@ const styles = StyleSheet.create({
 
   header: {
     backgroundColor: '#B3D9FF',
-    padding: 20,
+    padding: 20, // same as before
     marginTop: 15, 
-    marginBottom: 10,
+    marginBottom: 15, // slightly more margin
     borderRadius: 12,
     elevation: 2,
   },
 
   headerImage: {
-    width: 80,
+    width: 80, 
     height: 80,
     borderRadius: 40,
     marginBottom: 10,
@@ -330,17 +331,19 @@ const styles = StyleSheet.create({
   subtitle: {
     color: '#0D1B2A',
     fontSize: 16,
-    marginTop: 4,
+    marginTop: 4, 
     textAlign: 'center',
   },
 
-  alertsSection: {
-    backgroundColor: '#FFFFFF',
-    margin: 10,
-    borderRadius: 12,
-    padding: 15,
-    elevation: 2,
-  },
+ alertsSection: {
+  backgroundColor: '#FFFFFF',
+  borderRadius: 12,
+  padding: 15,
+  elevation: 2,
+  width: '100%',       
+  alignSelf: 'center', 
+  marginBottom: 15,    
+},
 
   alertsTitle: {
     fontSize: 18,
@@ -405,8 +408,8 @@ const styles = StyleSheet.create({
   metricsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingHorizontal: 10,
-    marginBottom: 10,
+    paddingHorizontal: 15,
+    marginBottom: 15,
   },
 
   metricCard: {
@@ -416,10 +419,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     margin: '1%',
     elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
     backgroundColor: '#FFFFFF',
   },
 
@@ -440,14 +439,14 @@ const styles = StyleSheet.create({
   actionsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingHorizontal: 10,
-    marginBottom: 20,
+    paddingHorizontal: 15,
+    marginBottom: 15,
   },
 
   actionCard: {
     width: '48%',
     alignItems: 'center',
-    padding: 20,
+    padding: 18,
     borderRadius: 12,
     margin: '1%',
     backgroundColor: '#B3D9FF',
@@ -455,7 +454,7 @@ const styles = StyleSheet.create({
   },
 
   actionText: {
-    marginTop: 10,
+    marginTop: 8,
     fontSize: 14,
     fontWeight: '500',
     textAlign: 'center',
@@ -464,7 +463,8 @@ const styles = StyleSheet.create({
 
   topItemsSection: {
     backgroundColor: '#FFFFFF',
-    margin: 10,
+    marginHorizontal: 15,
+    marginBottom: 15,
     borderRadius: 12,
     padding: 15,
     elevation: 2,
@@ -525,7 +525,8 @@ const styles = StyleSheet.create({
 
   insightsSection: {
     backgroundColor: '#FFFFFF',
-    margin: 10,
+    marginHorizontal: 15,
+    marginBottom: 20,
     borderRadius: 12,
     padding: 15,
     elevation: 2,
@@ -543,3 +544,4 @@ const styles = StyleSheet.create({
     color: '#0D1B2A',
   },
 });
+
