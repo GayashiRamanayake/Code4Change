@@ -46,7 +46,7 @@ const SignUpScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.logo}>☕</Text>
       <Text style={styles.title}>Neko & Kopi</Text>
-      <Text style={styles.subtitle}>Inventory Management</Text>
+      <Text style={styles.subtitle}>Inventory</Text>
 
       <View style={styles.formBox}>
         <Text style={styles.formTitle}>Create Account</Text>

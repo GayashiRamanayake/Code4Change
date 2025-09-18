@@ -32,7 +32,7 @@ const LoginScreen = ({ navigation }) => {
 
       {/* Title */}
       <Text style={styles.title}>Neko & Kopi</Text>
-      <Text style={styles.subtitle}>Inventory Management</Text>
+      <Text style={styles.subtitle}>Inventory</Text>
 
       {/* Input Fields */}
       <TextInput
