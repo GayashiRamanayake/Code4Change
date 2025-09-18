@@ -56,8 +56,8 @@ const LoginScreen = ({ navigation }) => {
         <Text style={styles.buttonText}>Sign In</Text>
       </TouchableOpacity>
 
-      {/* Forgot Password */}
-      <Text style={styles.link}>Forgot Password?</Text>
+      {/* Forgot Password 
+      <Text style={styles.link}>Forgot Password?</Text>*/}
 
       {/* Demo Credentials */}
       <View style={styles.demoBox}>
