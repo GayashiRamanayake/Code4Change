@@ -218,12 +218,12 @@ export default function DailyUsageScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#e6f0ff", padding: 16 },
+  container: { flex: 1, backgroundColor: "#e6f0ff", padding: 16, marginHorizontal: 4 },
   header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 15 },
   headerTitle: { fontSize: 22, fontWeight: "bold", color: "#0D1B2A", marginTop: 20 },
   headerSubtitle: { fontSize: 14, color: "#0D1B2A", marginTop: 2 },
   addButton: { backgroundColor: "#0047ab", borderRadius: 24, padding: 8, elevation: 3, marginLeft: 10 },
-  headerImage: { width: 120, height: 120, marginLeft:252 },
+  headerImage: { width: 120, height: 120, marginLeft: 252 },
 
   statsRow: { flexDirection: "row", justifyContent: "space-between", marginTop: 16, marginBottom: 12 },
   statCard: {
@@ -255,6 +255,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 4,
     elevation: 3,
+    marginHorizontal: 4,
   },
   usageRow: { flexDirection: "row", justifyContent: "space-between" },
   usageItem: { fontSize: 16, fontWeight: "600", color: "#0047ab" },

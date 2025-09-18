@@ -301,7 +301,7 @@ export default function InventoryScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#D0E6FA", padding: 16 },
+  container: { flex: 1, backgroundColor: "#D0E6FA", padding: 16, marginHorizontal: 2 },
   header: { marginBottom: 10,  marginTop: 30 },
   headerTitle: { fontSize: 20, fontWeight: "bold", color: "#0D1B2A", marginTop:30, marginBottom:1 },
   headerSubtitle: { fontSize: 14, color: "#0D1B2A", marginTop: 4, marginBottom:20 },
@@ -315,7 +315,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   buttonImage: {
-    width: 150,
+    width: 155,
     height: 100 
   },
   categoryRow: { flexDirection: "row", marginBottom: 16, alignItems: "center", flexWrap: "wrap" },
