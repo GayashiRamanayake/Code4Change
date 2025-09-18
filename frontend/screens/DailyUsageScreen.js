@@ -155,11 +155,7 @@ export default function DailyUsageScreen() {
           <Ionicons name="add" size={24} color="#fff" />
         </TouchableOpacity>
       </View>
-      <Image 
-        source={require('../../assets/images/DailyUsageCat.png')} 
-        style={styles.headerImage}
-        resizeMode="contain"
-      />
+      
 
       {/* Stats Row */}
       <View style={styles.statsRow}>
@@ -187,6 +183,11 @@ export default function DailyUsageScreen() {
           <Text style={styles.statLabel}>Entries Today</Text>
         </View>
       </View>
+      <Image 
+        source={require('../../assets/images/cat.png')} 
+        style={styles.headerImage}
+        resizeMode="contain"
+      />
 
       {/* List */}
       <Text style={styles.sectionTitle}>Recent Usage Entries</Text>
@@ -218,12 +219,12 @@ export default function DailyUsageScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#e6f0ff", padding: 16, marginHorizontal: 4 },
+  container: { flex: 1, backgroundColor: "#D0E6FA", padding: 16, marginHorizontal: 4 },
   header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 15 },
   headerTitle: { fontSize: 22, fontWeight: "bold", color: "#0D1B2A", marginTop: 20 },
   headerSubtitle: { fontSize: 14, color: "#0D1B2A", marginTop: 2 },
   addButton: { backgroundColor: "#0047ab", borderRadius: 24, padding: 8, elevation: 3, marginLeft: 10 },
-  headerImage: { width: 120, height: 120, marginLeft: 252 },
+  headerImage: { width: 200, height: 120, marginLeft: 70 },
 
   statsRow: { flexDirection: "row", justifyContent: "space-between", marginTop: 16, marginBottom: 12 },
   statCard: {
