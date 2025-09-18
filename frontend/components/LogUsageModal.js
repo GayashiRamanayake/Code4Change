@@ -7,19 +7,17 @@ export default function LogUsageModal({ visible, onClose, inventoryItems, onSubm
   const [amount, setAmount] = useState("");
   const [note, setNote] = useState("");
 
-  // Sort inventory items alphabetically by name
   const sortedItems = inventoryItems.slice().sort((a, b) =>
     a.name.localeCompare(b.name)
   );
 
-  // When modal opens, keep previous selection or default to first item
   useEffect(() => {
-    if (!visible) return; // only run when modal opens
+    if (!visible) return;
     setSelectedItemId(prev => {
       if (sortedItems.some(i => i.id === prev)) {
-        return prev; // keep previous selection if it still exists
+        return prev;
       }
-      return sortedItems[0]?.id || ""; // otherwise select first item
+      return sortedItems[0]?.id || "";
     });
   }, [visible, sortedItems]);
 
@@ -30,7 +28,6 @@ export default function LogUsageModal({ visible, onClose, inventoryItems, onSubm
 
     onSubmit({ itemId: selectedItemId, itemName: item.name, amount, note });
 
-    // Reset amount and note only, keep selected item
     setAmount("");
     setNote("");
   };
@@ -41,17 +38,20 @@ export default function LogUsageModal({ visible, onClose, inventoryItems, onSubm
         <View style={styles.modalContent}>
           <Text style={styles.title}>Add Usage</Text>
 
-          <Picker
-            selectedValue={selectedItemId}
-            onValueChange={setSelectedItemId}
-          >
-            {sortedItems.map(i => (
-              <Picker.Item key={i.id} label={i.name} value={i.id} />
-            ))}
-          </Picker>
+          <View style={styles.pickerWrapper}>
+            <Picker
+              selectedValue={selectedItemId}
+              onValueChange={setSelectedItemId}
+            >
+              {sortedItems.map(i => (
+                <Picker.Item key={i.id} label={i.name} value={i.id} />
+              ))}
+            </Picker>
+          </View>
 
           <TextInput
             placeholder="Amount"
+            placeholderTextColor="#a9a9a9"
             value={amount}
             onChangeText={setAmount}
             style={styles.input}
@@ -60,17 +60,18 @@ export default function LogUsageModal({ visible, onClose, inventoryItems, onSubm
 
           <TextInput
             placeholder="Note"
+            placeholderTextColor="#a9a9a9"
             value={note}
             onChangeText={setNote}
             style={styles.input}
           />
 
           <View style={styles.buttonRow}>
-            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+            <TouchableOpacity style={[styles.button, { backgroundColor: '#1E88E5' }]} onPress={handleSubmit}>
               <Text style={styles.buttonText}>Add</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.button, { backgroundColor: '#aaa' }]} onPress={onClose}>
+            <TouchableOpacity style={[styles.button, { backgroundColor: '#696969ff' }]} onPress={onClose}>
               <Text style={styles.buttonText}>Cancel</Text>
             </TouchableOpacity>
           </View>
@@ -81,11 +82,52 @@ export default function LogUsageModal({ visible, onClose, inventoryItems, onSubm
 }
 
 const styles = StyleSheet.create({
-  container:{flex:1,justifyContent:'center',alignItems:'center',backgroundColor:'rgba(0,0,0,0.5)'},
-  modalContent:{width:'90%',padding:20,backgroundColor:'#fff',borderRadius:10},
-  title:{fontSize:18,fontWeight:'bold',marginBottom:10},
-  input:{borderWidth:1,borderColor:'#ccc',borderRadius:5,padding:8,marginVertical:5},
-  buttonRow:{flexDirection:'row',justifyContent:'space-between',marginTop:10},
-  button:{backgroundColor:'#333',padding:10,borderRadius:5,flex:1,marginHorizontal:5},
-  buttonText:{color:'#fff',textAlign:'center',fontWeight:'bold'}
+  container: {
+    flex:1,
+    justifyContent:'center',
+    alignItems:'center',
+    backgroundColor:'rgba(0,0,0,0.5)'
+  },
+  modalContent: {
+    width:'90%',
+    padding:20,
+    backgroundColor:'#fff',
+    borderRadius:10
+  },
+  title: {
+    fontSize:18,
+    fontWeight:'bold',
+    marginBottom:10,
+    textAlign:"center"
+  },
+  pickerWrapper: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    marginVertical: 5,
+    overflow: 'hidden'
+  },
+  input: {
+    borderWidth:1,
+    borderColor:'#ccc',
+    borderRadius:5,
+    padding:8,
+    marginVertical:5
+  },
+  buttonRow: {
+    flexDirection:'row',
+    justifyContent:'space-between',
+    marginTop:10
+  },
+  button: {
+    padding:10,
+    borderRadius:5,
+    flex:1,
+    marginHorizontal:5
+  },
+  buttonText: {
+    color:'#fff',
+    textAlign:'center',
+    fontWeight:'bold'
+  }
 });

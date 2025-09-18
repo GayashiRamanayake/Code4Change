@@ -45,7 +45,6 @@ export default function DailyUsageScreen() {
         }
         const raw = snap.val();
         const list = Object.entries(raw).map(([id, v]) => {
-          // Use top-level stock if exists, else fallback to latest history
           let currentStock = typeof v?.stock === "number"
             ? v.stock
             : v?.history
@@ -111,16 +110,11 @@ export default function DailyUsageScreen() {
     };
 
     try {
-      // 1. Add usage log
       await push(ref(db, "logUsage"), payload);
-
-      // 2. Update stock
       const item = inventoryItems.find((i) => i.id === itemId);
       if (item) {
         const newStock = (item.stock ?? 0) - numeric;
         await update(ref(db, `inventory/${itemId}`), { stock: newStock });
-
-        // 3. Check threshold
         if (newStock <= item.threshold) {
           Alert.alert(
             "Low Stock Warning 🚨",
@@ -150,7 +144,10 @@ export default function DailyUsageScreen() {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Daily Usage</Text>
+        <View style={{ flexDirection: "column", flex: 1 }}>
+          <Text style={styles.headerTitle}>Daily Usage</Text>
+          <Text style={styles.headerSubtitle}>Track daily inventory consumption</Text>
+        </View>
         <TouchableOpacity
           style={styles.addButton}
           onPress={() => setModalVisible(true)}
@@ -159,10 +156,11 @@ export default function DailyUsageScreen() {
         </TouchableOpacity>
       </View>
       <Image 
-        source={require('../../assets/images/DailyUsageCat.png')} 
+        source={require('../../assets/images/TwoCats.png')} 
         style={styles.headerImage}
         resizeMode="contain"
       />
+      
 
       {/* Stats Row */}
       <View style={styles.statsRow}>
@@ -222,17 +220,18 @@ export default function DailyUsageScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#e6f0ff", padding: 16 },
+  container: { flex: 1, backgroundColor: "#D0E6FA", padding: 16, marginHorizontal: 4 },
   header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 15 },
-  headerTitle: { fontSize: 22, fontWeight: "bold", color: "#0047ab" },
-  addButton: { backgroundColor: "#0047ab", borderRadius: 24, padding: 8, elevation: 3, marginRight:20, },
-  headerImage: {width: 120 ,height: 120, /*marginTop: 10,*/alignSelf:"flex-end"},
+  headerTitle: { fontSize: 22, fontWeight: "bold", color: "#0D1B2A", marginTop: 20 },
+  headerSubtitle: { fontSize: 14, color: "#0D1B2A", marginTop: 2 },
+  addButton: { backgroundColor: "#0047ab", borderRadius: 24, padding: 8, elevation: 3, marginLeft: 10 },
+  headerImage: { width: 250, height: 120, marginLeft: 50, marginTop:20 },
 
-  statsRow: { flexDirection: "row", justifyContent: "space-between", marginTop: 16, marginBottom: 12 },
+  statsRow: { flexDirection: "row", marginBottom: 15 },
   statCard: {
     flex: 1,
     marginHorizontal: 4,
-    padding: 12,
+    padding: 10,
     borderRadius: 12,
     alignItems: "center",
     shadowColor: "#000",
@@ -240,6 +239,9 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
     backgroundColor: "#cfe2ff",
+    borderWidth: 1,                
+    borderColor: '#b9b8cdff',          
+    borderRadius: 10,
   },
   blueCard: { backgroundColor: "#a8d0ff" },
   greenCard: { backgroundColor: "#a8d0ff" },
@@ -258,12 +260,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 4,
     elevation: 3,
+    marginHorizontal: 4,
   },
-
   usageRow: { flexDirection: "row", justifyContent: "space-between" },
   usageItem: { fontSize: 16, fontWeight: "600", color: "#0047ab" },
   usageAmount: { fontSize: 16, fontWeight: "600", color: "#0047ab" },
   usageDate: { fontSize: 12, color: "#0047ab", marginTop: 4 },
   usageNote: { fontSize: 13, color: "#0047ab", fontStyle: "italic", marginTop: 4 },
-  
 });
