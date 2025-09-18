@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 
 export default function AddCategoryModal({ visible, onClose, onSave, existingCategories=[] }) {
   const [categoryName,setCategoryName]=useState("");
@@ -20,7 +19,6 @@ export default function AddCategoryModal({ visible, onClose, onSave, existingCat
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.title}>Add New Category</Text>
-            <TouchableOpacity onPress={handleClose}><Ionicons name="close" size={24} color="#aaa"/></TouchableOpacity>
           </View>
 
           <View style={styles.inputContainer}>
@@ -35,8 +33,12 @@ export default function AddCategoryModal({ visible, onClose, onSave, existingCat
           </View>
 
           <View style={styles.buttonRow}>
-            <TouchableOpacity style={[styles.button,styles.cancel]} onPress={handleClose}><Text style={styles.cancelText}>Cancel</Text></TouchableOpacity>
-            <TouchableOpacity style={[styles.button,styles.save]} onPress={handleSave}><Text style={styles.saveText}>Add Category</Text></TouchableOpacity>
+            <TouchableOpacity style={[styles.button,styles.cancel]} onPress={handleClose}>
+              <Text style={styles.cancelText}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.button,styles.save]} onPress={handleSave}>
+              <Text style={styles.saveText}>Add Category</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -44,16 +46,16 @@ export default function AddCategoryModal({ visible, onClose, onSave, existingCat
   );
 }
 
-const styles=StyleSheet.create({
+const styles = StyleSheet.create({
   overlay:{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:"rgba(0,0,0,0.5)"},
-  container:{backgroundColor:"#77acfcff",borderRadius:12,padding:20,width:"85%",maxWidth:400},
-  header:{flexDirection:"row",justifyContent:"space-between",alignItems:"center",marginBottom:20},
-  title:{fontSize:18,fontWeight:"bold",color:"#EAEAEA"},
+  container:{backgroundColor:"#fff",borderRadius:12,padding:20,width:"85%",maxWidth:400},
+  header:{flexDirection:"row",justifyContent:"center",alignItems:"center",marginBottom:20},
+  title:{fontSize:18,fontWeight:"bold",color:"#0a0a0a"},
   inputContainer:{marginBottom:25},
-  input:{borderWidth:1,borderColor:"#222",borderRadius:8,padding:12,fontSize:16,color:"#EAEAEA",backgroundColor:"#1A1F29"},
+  input:{borderWidth:1,borderColor:"#ccc",borderRadius:8,padding:12,fontSize:16,color:"#000",backgroundColor:"#F7F7F7"},
   buttonRow:{flexDirection:"row",justifyContent:"space-between",gap:12},
   button:{flex:1,paddingVertical:12,borderRadius:8,alignItems:"center"},
-  cancel:{backgroundColor:"#555"},
+  cancel:{backgroundColor:"#818181"},
   cancelText:{color:"#EAEAEA",fontWeight:"600"},
   save:{backgroundColor:"#2196F3"},
   saveText:{color:"#fff",fontWeight:"bold"}
