@@ -1,8 +1,23 @@
-import { registerRootComponent } from 'expo';
+// backend/src/index.js
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
 
-import App from './App';
+const profileRoutes = require("./routes/profileRoutes");
 
-// registerRootComponent calls AppRegistry.registerComponent('main', () => App);
-// It also ensures that whether you load the app in Expo Go or in a native build,
-// the environment is set up appropriately
-registerRootComponent(App);
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+app.get("/health", (_req, res) => res.json({ ok: true }));
+
+app.use("/api/profile", profileRoutes);
+
+// mount your other APIs here later: inventory, daily-usage, history, etc.
+// app.use("/api/inventory", inventoryRoutes);
+// app.use("/api/usage", usageRoutes);
+// app.use("/api/history", historyRoutes);
+
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => console.log(`API listening on :${PORT}`));
+

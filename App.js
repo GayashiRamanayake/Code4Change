@@ -1,36 +1,42 @@
-import * as React from "react";
+// App.js
+import React from "react";
+
+// Navigation imports
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-// Import your screens
-import LoginScreen from "./screens/LoginScreen";
-import SignUpScreen from "./screens/SignUpScreen";   // ✅ add this
-import DashboardScreen from "./screens/DashboardScreen";
-import InventoryScreen from "./screens/InventoryScreen";
-import DailyUsageScreen from "./screens/DailyUsageScreen";
-import ProfileScreen from "./screens/ProfileScreen";
-import HistoryScreen from "./screens/HistoryScreen";
+// Screens
+import SplashScreen from "./frontend/screens/SplashScreen";
+import LoginScreen from "./frontend/screens/LoginScreen";
+import SignUpScreen from "./frontend/screens/SignUpScreen";
+import DashboardScreen from "./frontend/screens/DashboardScreen";
+import InventoryScreen from "./frontend/screens/InventoryScreen";
+import DailyUsageScreen from "./frontend/screens/DailyUsageScreen";
+import ProfileScreen from "./frontend/screens/ProfileScreen";
+import HistoryScreen from "./frontend/screens/HistoryScreen";
 
-
+// Create navigator instances
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// Bottom Tab Navigator (Main App Tabs)
+// Bottom Tab Navigator (Main app tabs)
 function MainTabs() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false, 
+        tabBarActiveTintColor: "#007AFF",
+        tabBarInactiveTintColor: "gray",
+      }}
+    >
       <Tab.Screen
         name="Dashboard"
         component={DashboardScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons
-              name="view-dashboard"
-              size={size}
-              color={color}
-            />
+            <MaterialCommunityIcons name="view-dashboard" size={size} color={color} />
           ),
         }}
       />
@@ -51,6 +57,7 @@ function MainTabs() {
         name="Daily Usage"
         component={DailyUsageScreen}
         options={{
+          tabBarLabel: "Daily Usage",
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
               name="clipboard-text"
@@ -77,23 +84,28 @@ function MainTabs() {
   );
 }
 
-// App entry point
+// App Entry
 export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {/* First screen when app starts */}
-        <Stack.Screen name="Login" component={LoginScreen} />
+        {/* Splash screen first */}
+        <Stack.Screen name="Splash" component={SplashScreen} />
 
-        {/* Sign Up screen */}
+        {/* Login & SignUp */}
+        <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
 
-        {/* After login, show bottom tabs */}
+        {/* Main bottom tabs */}
         <Stack.Screen name="MainTabs" component={MainTabs} />
-        
-        <Stack.Screen name="History" component={HistoryScreen} />
 
+        {/* History screen can be accessed via navigation */}
+        <Stack.Screen name="History" component={HistoryScreen} 
+        options={{ headerShown: true, title: "Inventory History" }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+
+
+
