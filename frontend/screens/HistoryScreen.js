@@ -1,65 +1,135 @@
-// screens/HistoryScreen.js
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
 import axios from "axios";
 
 const API_URL = "https://neko-and-kopi-default-rtdb.firebaseio.com";
 
 export default function HistoryScreen({ route }) {
-  const { filterDate } = route.params;
-  const [historyList, setHistoryList] = useState([]);
+  const { filterDate } = route.params; // selected date from DatePickerModal
+  const [historyData, setHistoryData] = useState([]);
 
   useEffect(() => {
     fetchHistory();
-  }, []);
+  }, [filterDate]);
 
   const fetchHistory = async () => {
     try {
       const res = await axios.get(`${API_URL}/inventory.json`);
       const data = res.data
-        ? Object.keys(res.data)
-            .map((key) => ({ id: key, ...res.data[key] }))
-            .filter((item) => item.updatedAt === filterDate)
+        ? Object.keys(res.data).map((key) => ({
+            id: key,
+            ...res.data[key],
+          }))
         : [];
-      setHistoryList(data);
+
+      // Filter items updated on the selected date
+      const filtered = data
+        .map((item) => {
+          if (item.history) {
+            // Get history entry for selected date
+            const entry = item.history.find((h) => h.date === filterDate);
+            if (entry) {
+              return {
+                id: item.id,
+                name: item.name,
+                category: item.category,
+                stockBefore: entry.stockBefore || 0,
+                stockUsed: entry.stockUsed || 0,
+                stock: entry.stock || 0,
+                threshold: item.threshold || 5,
+              };
+            }
+          }
+          return null;
+        })
+        .filter((item) => item !== null);
+
+      setHistoryData(filtered);
     } catch (err) {
       console.log("Error fetching history:", err.message);
     }
   };
 
   const renderItem = ({ item }) => (
-    <View style={styles.itemCard}>
-      <Text style={styles.itemName}>{item.name}</Text>
-      <Text style={styles.itemCategory}>{item.category}</Text>
-      <Text style={styles.itemStock}>Stock: {item.stock}</Text>
-      <Text style={styles.itemDate}>Updated: {new Date(item.updatedAt).toDateString()}</Text>
+    <View style={styles.row}>
+      <Text style={styles.cell}>{item.name}</Text>
+      <Text style={styles.cell}>{item.category}</Text>
+      <Text style={styles.cell}>{item.stockBefore}</Text>
+      <Text style={styles.cell}>{item.stockUsed}</Text>
+      <Text style={styles.cell}>{item.stock}</Text>
+      <Text
+        style={[
+          styles.cell,
+          { color: item.stock <= item.threshold ? "#D32F2F" : "#4CAF50" },
+        ]}
+      >
+        {item.stock <= item.threshold ? "LOW" : "GOOD"}
+      </Text>
     </View>
   );
 
+  // Totals
+  const totalStockBefore = historyData.reduce(
+    (sum, item) => sum + item.stockBefore,
+    0
+  );
+  const totalStockUsed = historyData.reduce(
+    (sum, item) => sum + item.stockUsed,
+    0
+  );
+  const totalStockAfter = historyData.reduce((sum, item) => sum + item.stock, 0);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Inventory History - {new Date(filterDate).toDateString()}</Text>
-      {historyList.length === 0 ? (
-        <Text style={styles.noData}>No history found for this date.</Text>
-      ) : (
-        <FlatList
-          data={historyList}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={{ paddingBottom: 20 }}
-        />
+      <Text style={styles.title}>Inventory History - {filterDate}</Text>
+
+      <View style={styles.headerRow}>
+        <Text style={styles.headerCell}>Name</Text>
+        <Text style={styles.headerCell}>Category</Text>
+        <Text style={styles.headerCell}>Before</Text>
+        <Text style={styles.headerCell}>Used</Text>
+        <Text style={styles.headerCell}>After</Text>
+        <Text style={styles.headerCell}>Status</Text>
+      </View>
+
+      <FlatList
+        data={historyData}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+      />
+
+      {historyData.length > 0 && (
+        <View style={styles.totalsRow}>
+          <Text style={styles.totalsCell}>Totals</Text>
+          <Text style={styles.totalsCell}></Text>
+          <Text style={styles.totalsCell}>{totalStockBefore}</Text>
+          <Text style={styles.totalsCell}>{totalStockUsed}</Text>
+          <Text style={styles.totalsCell}>{totalStockAfter}</Text>
+          <Text style={styles.totalsCell}></Text>
+        </View>
       )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#D0E6FA", padding: 16 },
-  header: { fontSize: 18, fontWeight: "bold", marginBottom: 16, textAlign: "center" },
-  noData: { textAlign: "center", marginTop: 20, color: "#555" },
-  itemCard: { backgroundColor: "#fff", padding: 12, borderRadius: 10, marginBottom: 12, borderWidth: 1, borderColor: "#B0C4DE" },
-  itemName: { fontWeight: "bold", fontSize: 16, marginBottom: 4 },
-  itemCategory: { fontSize: 14, color: "#555" },
-  itemStock: { fontSize: 14, color: "#0D1B2A" },
-  itemDate: { fontSize: 12, color: "#999", marginTop: 4 },
+  container: { flex: 1, padding: 16, backgroundColor: "#D0E6FA" },
+  title: { fontSize: 18, fontWeight: "bold", marginBottom: 12, color: "#0D1B2A" },
+  headerRow: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderColor: "#aaa",
+    paddingVertical: 6,
+  },
+  headerCell: { flex: 1, fontWeight: "bold", fontSize: 12, color: "#0D1B2A" },
+  row: { flexDirection: "row", paddingVertical: 8, borderBottomWidth: 1, borderColor: "#ccc" },
+  cell: { flex: 1, fontSize: 12, color: "#0D1B2A" },
+  totalsRow: {
+    flexDirection: "row",
+    paddingVertical: 8,
+    borderTopWidth: 2,
+    borderColor: "#333",
+    marginTop: 8,
+  },
+  totalsCell: { flex: 1, fontWeight: "bold", color: "#0D1B2A" },
 });
