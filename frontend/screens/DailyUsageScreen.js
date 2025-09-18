@@ -11,16 +11,7 @@ import {
 import { Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { db } from "../firebaseConfig";
-import {
-  ref,
-  onValue,
-  off,
-  query,
-  orderByChild,
-  equalTo,
-  push,
-  update,
-} from "firebase/database";
+import { ref, onValue, off, push, update } from "firebase/database";
 import LogUsageModal from "../components/LogUsageModal";
 
 export default function DailyUsageScreen() {
@@ -35,95 +26,92 @@ export default function DailyUsageScreen() {
   // ---- Load inventory ----
   useEffect(() => {
     const invRef = ref(db, "inventory");
-    const unsubInv = onValue(
-      invRef,
-      (snap) => {
-        if (!snap.exists()) {
-          setInventoryItems([]);
-          setAvailableCount(0);
-          return;
-        }
-        const raw = snap.val();
-        const list = Object.entries(raw).map(([id, v]) => {
-          let currentStock = typeof v?.stock === "number"
-            ? v.stock
-            : v?.history
-            ? Object.values(v.history).slice(-1)[0]?.stock ?? 0
-            : 0;
+    const unsubInv = onValue(invRef, (snap) => {
+      if (!snap.exists()) {
+        setInventoryItems([]);
+        setAvailableCount(0);
+        return;
+      }
+      const raw = snap.val();
+      const list = Object.entries(raw).map(([id, v]) => {
+        let currentStock = typeof v?.stock === "number"
+          ? v.stock
+          : v?.history
+          ? Object.values(v.history).slice(-1)[0]?.stock ?? 0
+          : 0;
 
-          return {
-            id,
-            name: v?.name ?? id,
-            stock: currentStock,
-            unit: v?.unit ?? "",
-            threshold: typeof v?.threshold === "number" ? v.threshold : Number(v?.threshold ?? 0),
-          };
-        });
-        setInventoryItems(list);
-        setAvailableCount(list.filter((i) => (i.stock ?? 0) > 0).length);
-      },
-      (err) => console.warn("Inventory read error:", err)
-    );
+        return {
+          id,
+          name: v?.name ?? id,
+          stock: currentStock,
+          unit: v?.unit ?? "",
+          threshold: typeof v?.threshold === "number" ? v.threshold : Number(v?.threshold ?? 0),
+        };
+      });
+      setInventoryItems(list);
+      setAvailableCount(list.filter((i) => (i.stock ?? 0) > 0).length);
+    });
     return () => off(invRef, "value", unsubInv);
   }, []);
 
   // ---- Load today's usage logs ----
   useEffect(() => {
-    const q = query(ref(db, "logUsage"), orderByChild("dateStr"), equalTo(todayStr));
-    const unsubLogs = onValue(
-      q,
-      (snap) => {
-        if (!snap.exists()) {
-          setUsageData([]);
-          setLoading(false);
-          return;
-        }
-        const obj = snap.val();
-        const arr = Object.entries(obj)
-          .map(([id, v]) => ({ id, ...v }))
-          .sort((a, b) => new Date(b.dateISO) - new Date(a.dateISO));
-        setUsageData(arr);
+    const logRef = ref(db, "logUsage");
+    const unsubLogs = onValue(logRef, (snap) => {
+      if (!snap.exists()) {
+        setUsageData([]);
         setLoading(false);
-      },
-      (err) => {
-        console.warn("Log read error:", err);
-        setLoading(false);
+        return;
       }
-    );
-    return () => off(ref(db, "logUsage"), "value", unsubLogs);
+      const arr = Object.entries(snap.val())
+        .map(([id, v]) => ({ id, ...v }))
+        .filter(v => v.dateStr === todayStr)
+        .sort((a, b) => new Date(b.dateISO) - new Date(a.dateISO));
+      setUsageData(arr);
+      setLoading(false);
+    });
+    return () => off(logRef, "value", unsubLogs);
   }, [todayStr]);
 
-  // ---- Add usage log + check threshold ----
+  // ---- Add usage log + validation ----
   const addUsageLog = async ({ itemId, itemName, amount, note }) => {
     const trimmed = String(amount).trim();
-    if (!itemId || !itemName || !trimmed) return;
-    const numeric = Number(trimmed);
-    if (Number.isNaN(numeric)) return;
+    if (!itemId || !itemName || !trimmed) {
+      return { error: "Item and amount are required." };
+    }
 
-    const payload = {
-      itemId,
-      itemName,
-      amount: numeric,
-      note: note ?? "",
-      dateISO: new Date().toISOString(),
-      dateStr: todayStr,
-    };
+    const numeric = Number(trimmed);
+    if (Number.isNaN(numeric) || numeric <= 0) {
+      return { error: "Amount must be a positive number." };
+    }
+
+    const item = inventoryItems.find(i => i.id === itemId);
+    if (!item) return { error: "Selected item not found." };
 
     try {
-      await push(ref(db, "logUsage"), payload);
-      const item = inventoryItems.find((i) => i.id === itemId);
-      if (item) {
-        const newStock = (item.stock ?? 0) - numeric;
-        await update(ref(db, `inventory/${itemId}`), { stock: newStock });
-        if (newStock <= item.threshold) {
-          Alert.alert(
-            "Low Stock Warning 🚨",
-            `${item.name} stock is at ${newStock} ${item.unit}. Please restock soon!`
-          );
-        }
+      const newStock = (item.stock ?? 0) - numeric;
+      await update(ref(db, `inventory/${itemId}`), { stock: newStock });
+      const logRef = push(ref(db, "logUsage"));
+      await update(logRef, {
+        itemId,
+        itemName,
+        amount: numeric,
+        note: note ?? "",
+        dateISO: new Date().toISOString(),
+        dateStr: todayStr,
+      });
+
+      const lowStock = newStock <= item.threshold;
+      if (lowStock) {
+        Alert.alert(
+          "⚠️ Low Stock Warning",
+          `${item.name} stock is at ${newStock} ${item.unit}. Please restock!`
+        );
       }
+
+      return { success: true };
     } catch (e) {
-      console.warn("Failed to add log:", e);
+      return { error: "Failed to add usage log." };
     }
   };
 
@@ -144,51 +132,41 @@ export default function DailyUsageScreen() {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <View style={{ flexDirection: "column", flex: 1 }}>
+        <View style={{ flex: 1 }}>
           <Text style={styles.headerTitle}>Daily Usage</Text>
           <Text style={styles.headerSubtitle}>Track daily inventory consumption</Text>
         </View>
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={() => setModalVisible(true)}
-        >
+        <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
           <Ionicons name="add" size={24} color="#fff" />
         </TouchableOpacity>
       </View>
+
       <Image 
         source={require('../../assets/images/TwoCats.png')} 
         style={styles.headerImage}
         resizeMode="contain"
       />
-      
 
       {/* Stats Row */}
       <View style={styles.statsRow}>
         <View style={[styles.statCard, styles.blueCard]}>
           <Ionicons name="calendar-outline" size={22} color="#fff" />
           <Text style={styles.statValue}>
-            {new Date().toLocaleDateString(undefined, {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            })}
+            {new Date().toLocaleDateString(undefined, { month:"short", day:"numeric", year:"numeric" })}
           </Text>
           <Text style={styles.statLabel}>Current Date</Text>
         </View>
-
         <View style={[styles.statCard, styles.greenCard]}>
           <Ionicons name="cube-outline" size={22} color="#fff" />
           <Text style={styles.statValue}>{availableCount}</Text>
           <Text style={styles.statLabel}>Available Items</Text>
         </View>
-
         <View style={[styles.statCard, styles.orangeCard]}>
           <Ionicons name="document-text-outline" size={22} color="#fff" />
           <Text style={styles.statValue}>{usageData.length}</Text>
           <Text style={styles.statLabel}>Entries Today</Text>
         </View>
       </View>
-      
 
       {/* List */}
       <Text style={styles.sectionTitle}>Recent Usage Entries</Text>
@@ -200,7 +178,7 @@ export default function DailyUsageScreen() {
         <FlatList
           data={usageData}
           renderItem={renderItem}
-          keyExtractor={(it) => it.id}
+          keyExtractor={item => item.id}
           contentContainerStyle={{ paddingBottom: 24 }}
         />
       )}
@@ -210,10 +188,7 @@ export default function DailyUsageScreen() {
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
         inventoryItems={inventoryItems}
-        onSubmit={(data) => {
-          addUsageLog(data);
-          setModalVisible(false);
-        }}
+        onSubmit={addUsageLog}
       />
     </View>
   );
@@ -226,42 +201,15 @@ const styles = StyleSheet.create({
   headerSubtitle: { fontSize: 14, color: "#0D1B2A", marginTop: 2 },
   addButton: { backgroundColor: "#0047ab", borderRadius: 24, padding: 8, elevation: 3, marginLeft: 10 },
   headerImage: { width: 250, height: 120, marginLeft: 50, marginTop:20 },
-
   statsRow: { flexDirection: "row", marginBottom: 15 },
-  statCard: {
-    flex: 1,
-    marginHorizontal: 4,
-    padding: 10,
-    borderRadius: 12,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 3,
-    backgroundColor: "#cfe2ff",
-    borderWidth: 1,                
-    borderColor: '#b9b8cdff',          
-    borderRadius: 10,
-  },
+  statCard: { flex: 1, marginHorizontal: 4, padding: 10, borderRadius: 12, alignItems: "center", shadowColor: "#000", shadowOpacity: 0.08, shadowRadius: 4, elevation: 3, borderWidth: 1, borderColor: '#b9b8cdff', borderRadius: 10 },
   blueCard: { backgroundColor: "#a8d0ff" },
   greenCard: { backgroundColor: "#a8d0ff" },
   orangeCard: { backgroundColor: "#a8d0ff" },
   statValue: { fontSize: 16, fontWeight: "700", color: "#0047ab", marginTop: 4, textAlign: "center" },
   statLabel: { fontSize: 12, color: "#0047ab", textAlign: "center", marginTop: 2 },
   sectionTitle: { fontSize: 18, fontWeight: "bold", marginBottom: 10, color: "#0047ab" },
-  usageCard: {
-    backgroundColor: "#ffffff",
-    padding: 14,
-    borderRadius: 12,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: "#a1c4ff",
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 3,
-    marginHorizontal: 4,
-  },
+  usageCard: { backgroundColor: "#ffffff", padding: 14, borderRadius: 12, marginBottom: 12, borderWidth: 1, borderColor: "#a1c4ff", shadowColor: "#000", shadowOpacity: 0.05, shadowRadius: 4, elevation: 3, marginHorizontal: 4 },
   usageRow: { flexDirection: "row", justifyContent: "space-between" },
   usageItem: { fontSize: 16, fontWeight: "600", color: "#0047ab" },
   usageAmount: { fontSize: 16, fontWeight: "600", color: "#0047ab" },

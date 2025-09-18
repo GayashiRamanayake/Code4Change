@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Modal, View, Text, TouchableOpacity, TextInput, StyleSheet, Alert } from "react-native";
+import { Modal, View, Text, TouchableOpacity, TextInput, StyleSheet } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 
 export default function LogUsageModal({ visible, onClose, inventoryItems, onSubmit }) {
-  // Local state for selected item, usage amount, and note
   const [selectedItemId, setSelectedItemId] = useState("");
   const [amount, setAmount] = useState("");
   const [note, setNote] = useState("");
+  const [error, setError] = useState("");
 
   // Auto-select first inventory item when modal opens
   useEffect(() => {
@@ -15,34 +15,41 @@ export default function LogUsageModal({ visible, onClose, inventoryItems, onSubm
     }
   }, [inventoryItems]);
 
-  // Handle adding a usage entry
   const handleAdd = async () => {
     const item = inventoryItems.find((i) => i.id === selectedItemId);
-    if (!item || !amount.trim()) return;
+
+    // Validation
+    if (!item) {
+      setError("Please select an item.");
+      return;
+    }
+
+    if (!amount.trim()) {
+      setError("Amount is required.");
+      return;
+    }
+
+    const numeric = Number(amount);
+    if (Number.isNaN(numeric) || numeric <= 0) {
+      setError("Amount must be a positive number.");
+      return;
+    }
 
     try {
-      // Call parent-provided submit function (backend interaction)
+      setError(""); // Clear previous errors
       const log = await onSubmit({
         itemId: item.id,
         itemName: item.name,
-        amount: amount.trim(),
+        amount: numeric,
         note,
       });
 
-      // If stock is below threshold, alert the user
-      if (log.lowStock) {
-        Alert.alert(
-          "⚠️ Low Stock Warning",
-          `${item.name} has reached the threshold!\nRemaining: ${log.remaining}, Threshold: ${log.threshold}`
-        );
-      }
-
-      // Reset form fields after submission
+      // Reset form fields after successful submission
       setAmount("");
       setNote("");
       onClose();
     } catch (err) {
-      Alert.alert("Error", err.message);
+      setError(err.message || "Something went wrong.");
     }
   };
 
@@ -51,6 +58,9 @@ export default function LogUsageModal({ visible, onClose, inventoryItems, onSubm
       <View style={styles.backdrop}>
         <View style={styles.sheet}>
           <Text style={styles.title}>Add Usage</Text>
+
+          {/* Display error message */}
+          {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
           {/* Item Dropdown */}
           <Text style={styles.label}>Item</Text>
@@ -100,6 +110,7 @@ const styles = StyleSheet.create({
   backdrop: { flex: 1, backgroundColor: "rgba(0,0,0,0.4)", justifyContent: "flex-end" },
   sheet: { backgroundColor: "#fff", padding: 16, borderTopLeftRadius: 14, borderTopRightRadius: 14 },
   title: { fontSize: 18, fontWeight: "700", marginBottom: 12 },
+  errorText: { color: "red", marginBottom: 8, fontWeight: "600" },
   label: { fontSize: 12, color: "#555", marginTop: 8 },
   pickerWrap: { borderWidth: 1, borderColor: "#ddd", borderRadius: 8, overflow: "hidden" },
   input: { borderWidth: 1, borderColor: "#ddd", borderRadius: 8, padding: 10, marginTop: 6 },
