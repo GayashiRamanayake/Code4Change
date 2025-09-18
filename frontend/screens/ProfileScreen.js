@@ -110,7 +110,7 @@ export default function ProfileScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#D0E6FA", padding: 16, marginTop: 15, },
+  container: { flex: 1, backgroundColor: "#D0E6FA", padding: 16, marginTop: 15, marginHorizontal: 4},
   userSection: { flexDirection: "row", alignItems: "center", marginBottom: 16 },
   userName: { fontSize: 18, fontWeight: "bold", marginTop:30 },
   userEmail: { fontSize: 13, color: "#666" },
