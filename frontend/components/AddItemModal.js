@@ -76,11 +76,11 @@ export default function AddItemModal({ visible, onClose, onSave, categories }) {
 }
 
 const styles = StyleSheet.create({
-  modalContainer: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#f4f4fa53" },
-  modalContent: { width: "90%", backgroundColor: "#ffffffff", padding: 20, borderRadius: 12, borderWidth: 2, borderColor: "#2196F3" },
-  title: { fontSize: 18, fontWeight: "bold", marginBottom: 12, color: "#000000ff", textAlign:"center" },
-  input: { borderWidth: 1, borderColor: "#222", borderRadius: 6, padding: 10, marginVertical: 6, color: "#1A1A1A", backgroundColor: "#f0f0f0" },
-  pickerContainer: { borderWidth: 2, borderColor: "#6e6e6eff", borderRadius: 6, marginVertical: 6, backgroundColor: "#f0f0f0" },
+  modalContainer: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "rgba(0,0,0,0.6)" },
+  modalContent: { width: "90%", backgroundColor: "#fff", padding: 20, borderRadius: 12, borderWidth: 2, /*borderColor: "#2196F3"*/ },
+  title: { fontSize: 18, fontWeight: "bold", marginBottom: 12, color: "#000", textAlign:"center" },
+  input: { borderWidth: 1, borderColor: "#ccc", borderRadius: 6, padding: 10, marginVertical: 6, color: "#1A1A1A", backgroundColor: "#f9f9f9" },
+  pickerContainer: { borderWidth: 1, borderColor: "#ccc", borderRadius: 6, marginVertical: 6, backgroundColor: "#f9f9f9" },
   picker: { height: 50, width: "100%" },
   buttonRow: { flexDirection: "row", justifyContent: "space-between", marginTop: 10 },
   button: { backgroundColor: "#2196F3", padding: 12, borderRadius: 6, alignItems: "center" },
@@ -88,3 +88,5 @@ const styles = StyleSheet.create({
   cancel: { backgroundColor: "#808080" },
   buttonText: { color: "#fff", fontWeight: "bold" }
 });
+
+

@@ -190,6 +190,7 @@ export default function DailyUsageScreen() {
           <Text style={styles.statLabel}>Entries Today</Text>
         </View>
       </View>
+      
 
       {/* List */}
       <Text style={styles.sectionTitle}>Recent Usage Entries</Text>
@@ -258,9 +259,11 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
+
   usageRow: { flexDirection: "row", justifyContent: "space-between" },
   usageItem: { fontSize: 16, fontWeight: "600", color: "#0047ab" },
   usageAmount: { fontSize: 16, fontWeight: "600", color: "#0047ab" },
   usageDate: { fontSize: 12, color: "#0047ab", marginTop: 4 },
   usageNote: { fontSize: 13, color: "#0047ab", fontStyle: "italic", marginTop: 4 },
+  
 });
