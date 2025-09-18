@@ -252,7 +252,7 @@ export default function InventoryScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#D0E6FA", padding: 16 },
-  header: { marginBottom: 10 },
+  header: { marginBottom: 10,  marginTop: 15 },
   headerTitle: { fontSize: 20, fontWeight: "bold", color: "#0D1B2A" },
   headerSubtitle: { fontSize: 14, color: "#0D1B2A", marginTop: 4 },
   summaryContainer: { flexDirection: "row", justifyContent: "space-between", marginBottom: 16 },

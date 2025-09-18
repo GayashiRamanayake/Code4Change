@@ -207,7 +207,7 @@ export default function DailyUsageScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#e6f0ff", padding: 16 },
-  header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+  header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 15 },
   headerTitle: { fontSize: 22, fontWeight: "bold", color: "#0047ab" },
   addButton: { backgroundColor: "#0047ab", borderRadius: 24, padding: 8, elevation: 3 },
   statsRow: { flexDirection: "row", justifyContent: "space-between", marginTop: 16, marginBottom: 12 },
