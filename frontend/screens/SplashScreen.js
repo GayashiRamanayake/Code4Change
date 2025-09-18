@@ -1,6 +1,6 @@
 // frontend/screens/SplashScreen.js
 import React, { useEffect, useRef } from "react";
-import { View, Image, StyleSheet, Animated } from "react-native";
+import { View, Animated, StyleSheet } from "react-native";
 
 export default function SplashScreen({ navigation }) {
   const fadeAnim = useRef(new Animated.Value(0)).current; // Initial opacity 0
@@ -9,7 +9,7 @@ export default function SplashScreen({ navigation }) {
     // Fade-in animation
     Animated.timing(fadeAnim, {
       toValue: 1,
-      duration: 1000, // 1 second fade in
+      duration: 1000,
       useNativeDriver: true,
     }).start();
 
@@ -24,9 +24,9 @@ export default function SplashScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <Animated.Image
-        source={require("../../assets/images/splashscreen.png")} // <-- Replace with your image
+        source={require("../../assets/images/splashscreen.png")}
         style={[styles.image, { opacity: fadeAnim }]}
-        resizeMode="contain"
+        resizeMode="stretch" // stretches image to fit full screen
       />
     </View>
   );
@@ -35,15 +35,10 @@ export default function SplashScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#D0E6FA", // optional background
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: "#D0E6FA",
   },
   image: {
-    width: "100%",     // fill width
-    height: "100%",    // fill height
-    resizeMode: "cover", // cover the whole screen without stretching
+    width: "100%",
+    height: "100%",
   },
 });
-
-

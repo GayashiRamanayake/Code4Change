@@ -96,7 +96,7 @@ export default function ProfileScreen({ navigation }) {
       {/* Cute Cat Illustration */}
       <View style={styles.catContainer}>
         <Image
-  source={require("../../assets/images/catcute.jpg")}
+  source={require("../../assets/images/catcute.png")}
   style={styles.catImage}
   resizeMode="contain"
 />
@@ -110,7 +110,7 @@ export default function ProfileScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff", padding: 16, marginTop: 15, },
+  container: { flex: 1, backgroundColor: "#D0E6FA", padding: 16, marginTop: 15, },
   userSection: { flexDirection: "row", alignItems: "center", marginBottom: 16 },
   userName: { fontSize: 18, fontWeight: "bold" },
   userEmail: { fontSize: 13, color: "#666" },

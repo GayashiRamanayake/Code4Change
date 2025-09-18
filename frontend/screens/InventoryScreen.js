@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   FlatList,
   Alert,
+  Image
 } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import AddItemModal from "../components/AddItemModal";
@@ -217,20 +218,27 @@ export default function InventoryScreen() {
         </View>
       </View>
 
+      
       <View style={styles.headerButtons}>
         <TouchableOpacity
-          style={styles.historyButton}
+          style={styles.imageButton}
           onPress={() => setDateModalVisible(true)}
         >
-          <Ionicons name="time-outline" size={14} color="#fff" />
-          <Text style={styles.historyButtonText}>History</Text>
+          <Image 
+            source={require('../../assets/images/KittenButtonHistory.png')} 
+            style={styles.buttonImage}
+            resizeMode="contain"
+          />
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.addButton}
+          style={styles.imageButton}
           onPress={() => setAddModalVisible(true)}
         >
-          <Ionicons name="add" size={18} color="#fff" />
-          <Text style={styles.addButtonText}> Add</Text>
+          <Image 
+            source={require('../../assets/images/KittenButtonAdd.png')} 
+            style={styles.buttonImage}
+            resizeMode="contain"
+          />
         </TouchableOpacity>
       </View>
 
@@ -301,11 +309,15 @@ const styles = StyleSheet.create({
   summaryCard: { flex: 1, backgroundColor: "#FFFFFF", borderRadius: 12, padding: 16, marginHorizontal: 6, alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: "#B0C4DE" },
   summaryNumber: { fontSize: 20, fontWeight: "bold", color: "#0D1B2A" },
   summaryLabel: { fontSize: 13, color: "#555", marginTop: 4 },
-  headerButtons: { flexDirection: "row", justifyContent: "center", marginVertical: 20, gap: 12 },
-  addButton: { flexDirection: "row", alignItems: "center", backgroundColor: "#1E88E5", borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8 },
-  addButtonText: { color: "#fff", fontWeight: "bold", fontSize: 14 },
-  historyButton: { flexDirection: "row", alignItems: "center", backgroundColor: "#1976D2", borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8 },
-  historyButtonText: { color: "#fff", fontWeight: "bold", fontSize: 14, marginLeft: 6 },
+  headerButtons: { flexDirection: "row", justifyContent: "center", marginVertical: 20},
+  imageButton: { 
+    alignItems: "center", 
+    justifyContent: "center",
+  },
+  buttonImage: {
+    width: 150,
+    height: 100 
+  },
   categoryRow: { flexDirection: "row", marginBottom: 16, alignItems: "center", flexWrap: "wrap" },
   categoryButton: { paddingHorizontal: 14, paddingVertical: 6, backgroundColor: "#A9CCE3", borderRadius: 20, marginRight: 8, marginBottom: 8 },
   categorySelected: { backgroundColor: "#1E88E5" },

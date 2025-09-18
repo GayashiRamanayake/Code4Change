@@ -1,33 +1,30 @@
-// backend/src/repository/ProfileRepo.js
-const { db } = require("../service/firebaseConfig");
+// src/repository/ProfileRepo.js
+import { getDatabase } from "firebase-admin/database";
 
-const userRoot    = (uid) => db.ref(`users/${uid}`);
-const profileRef  = (uid) => userRoot(uid).child("profile");
-const settingsRef = (uid) => userRoot(uid).child("settings");
+// uses the default Admin app initialized in src/firebaseAdmin.js
+const db = getDatabase();
+
+const profileRef  = (uid) => db.ref(`users/${uid}/profile`);
+const settingsRef = (uid) => db.ref(`users/${uid}/settings`);
 
 // ---- Profile ----
-async function getProfile(uid) {
+export async function getProfile(uid) {
   const snap = await profileRef(uid).get();
   return snap.exists() ? snap.val() : null;
 }
 
-async function setProfile(uid, data) {
-  await profileRef(uid).update(data); // merge, not overwrite
+export async function setProfile(uid, data) {
+  // merge (don’t overwrite whole node)
+  await profileRef(uid).update(data);
 }
 
 // ---- Settings ----
-async function getSettings(uid) {
+export async function getSettings(uid) {
   const snap = await settingsRef(uid).get();
   return snap.exists() ? snap.val() : null;
 }
 
-async function setSettings(uid, data) {
-  await settingsRef(uid).update(data); // merge, not overwrite
+export async function setSettings(uid, data) {
+  // merge (don’t overwrite whole node)
+  await settingsRef(uid).update(data);
 }
-
-module.exports = {
-  getProfile,
-  setProfile,
-  getSettings,
-  setSettings
-};

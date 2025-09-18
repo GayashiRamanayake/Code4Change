@@ -1,23 +1,31 @@
-// backend/src/index.js
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
+import "dotenv/config";
+import express from "express";
+import cors from "cors";
+import bodyParser from "body-parser";
 
-const profileRoutes = require("./routes/profileRoutes");
+import inventoryRoutes from "./routes/InventoryRoutes.js";
+import historyRouter from "./controller/HistoryController.js";
+import "./firebaseConfig.js";                 // <-- correct file
+import profileRoutes from "./routes/profileRoutes.js";
+// root/index.js  (Expo entry – no Express here)
+import { registerRootComponent } from "expo";
+import App from "./App";
+
+registerRootComponent(App);
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+
 app.use(cors());
+app.use(bodyParser.json());
 app.use(express.json());
+
+app.use("/inventory", inventoryRoutes);
+app.use("/api/history", historyRouter);
+app.use("/api/profile", profileRoutes);
 
 app.get("/health", (_req, res) => res.json({ ok: true }));
 
-app.use("/api/profile", profileRoutes);
-
-// mount your other APIs here later: inventory, daily-usage, history, etc.
-// app.use("/api/inventory", inventoryRoutes);
-// app.use("/api/usage", usageRoutes);
-// app.use("/api/history", historyRoutes);
-
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log(`API listening on :${PORT}`));
-
+app.listen(PORT, () => {
+  console.log(`Backend running on http://localhost:${PORT}`);
+});

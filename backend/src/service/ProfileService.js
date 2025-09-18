@@ -1,6 +1,26 @@
-// backend/src/service/ProfileService.js
-const { getProfile, setProfile, getSettings, setSettings } = require("../repository/ProfileRepo");
-const { DEFAULT_SETTINGS, DEFAULT_PROFILE } = require("../models/UserModel");
+// src/service/ProfileService.js
+import {
+  getProfile,
+  setProfile,
+  getSettings,
+  setSettings,
+} from "../repository/ProfileRepo.js";
+
+// Keep defaults here so we don't touch shared group files
+const DEFAULT_PROFILE = {
+  displayName: "Café Manager",
+  email: "",
+  role: "manager",
+  avatarUrl: "",
+  version: "1.0.0",
+};
+
+const DEFAULT_SETTINGS = {
+  notificationsEnabled: true,
+  lowStockAlertsEnabled: true,
+  qualityAlertsEnabled: true,
+  updatedAt: 0,
+};
 
 const nowTs = () => Date.now();
 
@@ -22,15 +42,15 @@ async function ensureSettings(uid) {
   return settings;
 }
 
-async function fetchFullProfile(uid, emailFromAuth) {
+export async function fetchFullProfile(uid, emailFromAuth) {
   const [profile, settings] = await Promise.all([
     ensureProfile(uid, emailFromAuth),
-    ensureSettings(uid)
+    ensureSettings(uid),
   ]);
   return { profile, settings };
 }
 
-async function updateSettings(uid, partial) {
+export async function updateSettings(uid, partial = {}) {
   const allowed = {};
   if (typeof partial.notificationsEnabled === "boolean")
     allowed.notificationsEnabled = partial.notificationsEnabled;
@@ -44,13 +64,12 @@ async function updateSettings(uid, partial) {
   return getSettings(uid);
 }
 
-function getAppInfo() {
+export function getAppInfo() {
   return {
     name: "Neko & Kopi Inventory",
     version: "1.0.0",
-    about: "Professional inventory management system designed specifically for café operations.",
-    supportEmail: "support@nekokopi.com"
+    about:
+      "Professional inventory management system designed specifically for café operations.",
+    supportEmail: "support@nekokopi.com",
   };
 }
-
-module.exports = { fetchFullProfile, updateSettings, getAppInfo };

@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
+import { Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { db } from "../firebaseConfig";
 import {
@@ -157,6 +158,11 @@ export default function DailyUsageScreen() {
           <Ionicons name="add" size={24} color="#fff" />
         </TouchableOpacity>
       </View>
+      <Image 
+        source={require('../../assets/images/DailyUsageCat.png')} 
+        style={styles.headerImage}
+        resizeMode="contain"
+      />
 
       {/* Stats Row */}
       <View style={styles.statsRow}>
@@ -184,6 +190,7 @@ export default function DailyUsageScreen() {
           <Text style={styles.statLabel}>Entries Today</Text>
         </View>
       </View>
+      
 
       {/* List */}
       <Text style={styles.sectionTitle}>Recent Usage Entries</Text>
@@ -218,7 +225,9 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#e6f0ff", padding: 16 },
   header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 15 },
   headerTitle: { fontSize: 22, fontWeight: "bold", color: "#0047ab" },
-  addButton: { backgroundColor: "#0047ab", borderRadius: 24, padding: 8, elevation: 3 },
+  addButton: { backgroundColor: "#0047ab", borderRadius: 24, padding: 8, elevation: 3, marginRight:20, },
+  headerImage: {width: 120 ,height: 120, /*marginTop: 10,*/alignSelf:"flex-end"},
+
   statsRow: { flexDirection: "row", justifyContent: "space-between", marginTop: 16, marginBottom: 12 },
   statCard: {
     flex: 1,
@@ -232,14 +241,14 @@ const styles = StyleSheet.create({
     elevation: 3,
     backgroundColor: "#cfe2ff",
   },
-  blueCard: { backgroundColor: "#cfe2ff" },
-  greenCard: { backgroundColor: "#cfe2ff" },
-  orangeCard: { backgroundColor: "#cfe2ff" },
-  statValue: { fontSize: 16, fontWeight: "700", color: "#0047ab", marginTop: 4 },
+  blueCard: { backgroundColor: "#a8d0ff" },
+  greenCard: { backgroundColor: "#a8d0ff" },
+  orangeCard: { backgroundColor: "#a8d0ff" },
+  statValue: { fontSize: 16, fontWeight: "700", color: "#0047ab", marginTop: 4, textAlign: "center" },
   statLabel: { fontSize: 12, color: "#0047ab", textAlign: "center", marginTop: 2 },
   sectionTitle: { fontSize: 18, fontWeight: "bold", marginBottom: 10, color: "#0047ab" },
   usageCard: {
-    backgroundColor: "#cfe2ff",
+    backgroundColor: "#ffffff",
     padding: 14,
     borderRadius: 12,
     marginBottom: 12,
@@ -250,9 +259,11 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
+
   usageRow: { flexDirection: "row", justifyContent: "space-between" },
   usageItem: { fontSize: 16, fontWeight: "600", color: "#0047ab" },
   usageAmount: { fontSize: 16, fontWeight: "600", color: "#0047ab" },
   usageDate: { fontSize: 12, color: "#0047ab", marginTop: 4 },
   usageNote: { fontSize: 13, color: "#0047ab", fontStyle: "italic", marginTop: 4 },
+  
 });

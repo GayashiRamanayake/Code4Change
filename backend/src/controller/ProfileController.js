@@ -1,25 +1,24 @@
-// backend/src/controller/ProfileController.js
-const ProfileService = require("../service/ProfileService");
+// src/controller/ProfileController.js
+import * as ProfileService from "../service/ProfileService.js";
 
-// quick + dirty user resolver (headers). replace with auth middleware later if needed.
+// Read user info from headers (keeps it simple / no auth changes)
 function resolveUser(req) {
-  const uid = req.headers["x-user-id"];
+  const uid = req.headers["x-user-id"] || "demo-user";
   const email = req.headers["x-user-email"] || "";
-  if (!uid) throw new Error("Missing x-user-id");
   return { uid, email };
 }
 
-exports.getMe = async (req, res) => {
+export async function getMe(req, res) {
   try {
     const { uid, email } = resolveUser(req);
     const data = await ProfileService.fetchFullProfile(uid, email);
-    res.json(data);
+    res.json(data); // { profile, settings }
   } catch (e) {
     res.status(400).json({ error: e.message || "Bad Request" });
   }
-};
+}
 
-exports.getSettings = async (req, res) => {
+export async function getSettings(req, res) {
   try {
     const { uid, email } = resolveUser(req);
     const data = await ProfileService.fetchFullProfile(uid, email);
@@ -27,9 +26,9 @@ exports.getSettings = async (req, res) => {
   } catch (e) {
     res.status(400).json({ error: e.message || "Bad Request" });
   }
-};
+}
 
-exports.updateSettings = async (req, res) => {
+export async function updateSettings(req, res) {
   try {
     const { uid } = resolveUser(req);
     const updated = await ProfileService.updateSettings(uid, req.body || {});
@@ -37,10 +36,12 @@ exports.updateSettings = async (req, res) => {
   } catch (e) {
     res.status(400).json({ error: e.message || "Bad Request" });
   }
-};
+}
 
-exports.getAppInfo = (_req, res) => {
+export function getAppInfo(_req, res) {
   res.json(ProfileService.getAppInfo());
-};
+}
 
-exports.logout = (_req, res) => res.status(204).end();
+export function logout(_req, res) {
+  res.status(204).end();
+}
