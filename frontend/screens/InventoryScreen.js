@@ -198,7 +198,7 @@ export default function InventoryScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
+      <View style={styles.headerBar}>
         <Text style={styles.headerTitle}>Inventory Management</Text>
         <Text style={styles.headerSubtitle}>Stay updated on stock availability</Text>
       </View>
@@ -302,9 +302,9 @@ export default function InventoryScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#D0E6FA", padding: 16 },
-  header: { marginBottom: 10,  marginTop: 15 },
-  headerTitle: { fontSize: 20, fontWeight: "bold", color: "#0D1B2A" },
-  headerSubtitle: { fontSize: 14, color: "#0D1B2A", marginTop: 4 },
+  header: { marginBottom: 10,  marginTop: 30 },
+  headerTitle: { fontSize: 20, fontWeight: "bold", color: "#0D1B2A", marginTop:30, marginBottom:1 },
+  headerSubtitle: { fontSize: 14, color: "#0D1B2A", marginTop: 4, marginBottom:20 },
   summaryContainer: { flexDirection: "row", justifyContent: "space-between", marginBottom: 16 },
   summaryCard: { flex: 1, backgroundColor: "#FFFFFF", borderRadius: 12, padding: 16, marginHorizontal: 6, alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: "#B0C4DE" },
   summaryNumber: { fontSize: 20, fontWeight: "bold", color: "#0D1B2A" },
