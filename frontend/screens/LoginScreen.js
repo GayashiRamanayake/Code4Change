@@ -1,4 +1,4 @@
-// import React, { useState } from "react";
+// import React, { useState, useEffect } from "react";
 // import {
 //   View,
 //   Text,
@@ -7,34 +7,64 @@
 //   StyleSheet,
 //   Alert,
 // } from "react-native";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // const LoginScreen = ({ navigation }) => {
 //   const [email, setEmail] = useState("");
 //   const [password, setPassword] = useState("");
+//   const [users, setUsers] = useState([]);
 
-//   const handleLogin = () => {
-//     if (email === "manager@nekokopi.com" && password === "password") {
+//   // Preload demo user if not exists
+//   useEffect(() => {
+//     const loadUsers = async () => {
+//       const jsonValue = await AsyncStorage.getItem("@users");
+//       let storedUsers = jsonValue ? JSON.parse(jsonValue) : [];
+
+//       // Add demo user
+//       if (!storedUsers.find((u) => u.email === "manager@nekokopi.com")) {
+//         storedUsers.push({ name: "Admin", email: "manager@nekokopi.com", password: "password" });
+//         await AsyncStorage.setItem("@users", JSON.stringify(storedUsers));
+//       }
+
+//       setUsers(storedUsers);
+//     };
+
+//     loadUsers();
+//   }, []);
+
+//   const handleLogin = async () => {
+//     if (!email || !password) {
+//       Alert.alert("Error", "Email and password are required");
+//       return;
+//     }
+
+//     const jsonValue = await AsyncStorage.getItem("@users");
+//     const storedUsers = jsonValue ? JSON.parse(jsonValue) : [];
+
+//     const user = storedUsers.find(
+//       (u) => u.email.toLowerCase() === email.toLowerCase() && u.password === password
+//     );
+
+//     if (user) {
+//       Alert.alert("Success", `Welcome back, ${user.name}!`);
 //       navigation.replace("MainTabs");
 //     } else {
-//       Alert.alert("Login Failed", "Invalid email or password");
+//       Alert.alert("Error", "Invalid email or password");
 //     }
 //   };
 
 //   return (
 //     <View style={styles.container}>
-//       {/* Decorative top circle */}
 //       <View style={styles.topCircle}></View>
+//       <View style={styles.bottomCircle}></View>
 
-//       {/* Logo */}
 //       <View style={styles.logoContainer}>
 //         <Text style={styles.logo}>☕</Text>
 //       </View>
 
-//       {/* Title */}
 //       <Text style={styles.title}>Neko & Kopi</Text>
 //       <Text style={styles.subtitle}>Inventory Management</Text>
 
-//       {/* Input Fields */}
 //       <TextInput
 //         style={styles.input}
 //         placeholder="Email address"
@@ -51,12 +81,10 @@
 //         secureTextEntry
 //       />
 
-//       {/* Sign In Button */}
 //       <TouchableOpacity style={styles.button} onPress={handleLogin}>
 //         <Text style={styles.buttonText}>Sign In</Text>
 //       </TouchableOpacity>
 
-//       {/* Sign Up Link */}
 //       <Text style={styles.footerText}>
 //         Don’t have an account?{" "}
 //         <Text
@@ -66,19 +94,17 @@
 //           Sign Up
 //         </Text>
 //       </Text>
-
-//       {/* Decorative bottom circle */}
-//       <View style={styles.bottomCircle}></View>
 //     </View>
 //   );
 // };
 
 // export default LoginScreen;
 
+
 // const styles = StyleSheet.create({
 //   container: {
 //     flex: 1,
-//     backgroundColor: "#E1F5FE", // light background blue
+//     backgroundColor: "#E1F5FE",
 //     alignItems: "center",
 //     justifyContent: "center",
 //     padding: 20,
@@ -150,23 +176,10 @@
 //     elevation: 4,
 //   },
 //   buttonText: { color: "#fff", fontSize: 18, fontWeight: "600" },
-//   link: { color: "#0277BD", marginBottom: 20, fontSize: 14 },
-//   demoBox: {
-//     backgroundColor: "#B3E5FC",
-//     padding: 15,
-//     borderRadius: 12,
-//     width: "100%",
-//     marginBottom: 20,
-//     alignItems: "center",
-//     shadowColor: "#000",
-//     shadowOpacity: 0.05,
-//     shadowRadius: 5,
-//     elevation: 2,
-//   },
-//   demoTitle: { fontWeight: "bold", marginBottom: 5, color: "#01579B" },
 //   footerText: { fontSize: 14, color: "#555" },
 //   linkHighlight: { color: "#0277BD", fontWeight: "600" },
 // });
+
 
 
 import React, { useState, useEffect } from "react";
@@ -176,7 +189,6 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -184,6 +196,7 @@ const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [users, setUsers] = useState([]);
+  const [error, setError] = useState(""); // inline error message
 
   // Preload demo user if not exists
   useEffect(() => {
@@ -193,7 +206,11 @@ const LoginScreen = ({ navigation }) => {
 
       // Add demo user
       if (!storedUsers.find((u) => u.email === "manager@nekokopi.com")) {
-        storedUsers.push({ name: "Admin", email: "manager@nekokopi.com", password: "password" });
+        storedUsers.push({
+          name: "Admin",
+          email: "manager@nekokopi.com",
+          password: "password",
+        });
         await AsyncStorage.setItem("@users", JSON.stringify(storedUsers));
       }
 
@@ -204,8 +221,10 @@ const LoginScreen = ({ navigation }) => {
   }, []);
 
   const handleLogin = async () => {
+    setError(""); // reset previous error
+
     if (!email || !password) {
-      Alert.alert("Error", "Email and password are required");
+      setError("Email and password are required");
       return;
     }
 
@@ -213,14 +232,15 @@ const LoginScreen = ({ navigation }) => {
     const storedUsers = jsonValue ? JSON.parse(jsonValue) : [];
 
     const user = storedUsers.find(
-      (u) => u.email.toLowerCase() === email.toLowerCase() && u.password === password
+      (u) =>
+        u.email.toLowerCase() === email.toLowerCase() &&
+        u.password === password
     );
 
     if (user) {
-      Alert.alert("Success", `Welcome back, ${user.name}!`);
       navigation.replace("MainTabs");
     } else {
-      Alert.alert("Error", "Invalid email or password");
+      setError("Invalid email or password");
     }
   };
 
@@ -251,6 +271,9 @@ const LoginScreen = ({ navigation }) => {
         onChangeText={setPassword}
         secureTextEntry
       />
+
+      {/* Inline Error Message */}
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Sign In</Text>
@@ -323,7 +346,7 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderRadius: 12,
     paddingHorizontal: 15,
-    marginBottom: 15,
+    marginBottom: 12,
     backgroundColor: "#fff",
     shadowColor: "#000",
     shadowOpacity: 0.1,
@@ -331,6 +354,14 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 3,
     color: "#000",
+  },
+  errorText: {
+    color: "#D32F2F",
+    fontSize: 14,
+    marginBottom: 10,
+    textAlign: "left",
+    width: "100%",
+    paddingHorizontal: 5,
   },
   button: {
     width: "100%",
