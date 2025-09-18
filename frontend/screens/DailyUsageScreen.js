@@ -241,9 +241,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#cfe2ff",
   },
   blueCard: { backgroundColor: "#a8d0ff" },
-  greenCard: { backgroundColor: "#b9fbc0" },
-  orangeCard: { backgroundColor: "#ffd8b0" },
-  statValue: { fontSize: 16, fontWeight: "700", color: "#0047ab", marginTop: 4 },
+  greenCard: { backgroundColor: "#a8d0ff" },
+  orangeCard: { backgroundColor: "#a8d0ff" },
+  statValue: { fontSize: 16, fontWeight: "700", color: "#0047ab", marginTop: 4, textAlign: "center" },
   statLabel: { fontSize: 12, color: "#0047ab", textAlign: "center", marginTop: 2 },
   sectionTitle: { fontSize: 18, fontWeight: "bold", marginBottom: 10, color: "#0047ab" },
   usageCard: {
