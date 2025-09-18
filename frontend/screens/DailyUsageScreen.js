@@ -155,6 +155,11 @@ export default function DailyUsageScreen() {
           <Ionicons name="add" size={24} color="#fff" />
         </TouchableOpacity>
       </View>
+      <Image 
+        source={require('../../assets/images/TwoCats.png')} 
+        style={styles.headerImage}
+        resizeMode="contain"
+      />
       
 
       {/* Stats Row */}
@@ -183,11 +188,7 @@ export default function DailyUsageScreen() {
           <Text style={styles.statLabel}>Entries Today</Text>
         </View>
       </View>
-      <Image 
-        source={require('../../assets/images/cat.png')} 
-        style={styles.headerImage}
-        resizeMode="contain"
-      />
+      
 
       {/* List */}
       <Text style={styles.sectionTitle}>Recent Usage Entries</Text>
@@ -224,13 +225,13 @@ const styles = StyleSheet.create({
   headerTitle: { fontSize: 22, fontWeight: "bold", color: "#0D1B2A", marginTop: 20 },
   headerSubtitle: { fontSize: 14, color: "#0D1B2A", marginTop: 2 },
   addButton: { backgroundColor: "#0047ab", borderRadius: 24, padding: 8, elevation: 3, marginLeft: 10 },
-  headerImage: { width: 200, height: 120, marginLeft: 70 },
+  headerImage: { width: 250, height: 120, marginLeft: 50, marginTop:20 },
 
-  statsRow: { flexDirection: "row", justifyContent: "space-between", marginTop: 16, marginBottom: 12 },
+  statsRow: { flexDirection: "row", marginBottom: 15 },
   statCard: {
     flex: 1,
     marginHorizontal: 4,
-    padding: 12,
+    padding: 10,
     borderRadius: 12,
     alignItems: "center",
     shadowColor: "#000",
@@ -238,6 +239,9 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
     backgroundColor: "#cfe2ff",
+    borderWidth: 1,                
+    borderColor: '#b9b8cdff',          
+    borderRadius: 10,
   },
   blueCard: { backgroundColor: "#a8d0ff" },
   greenCard: { backgroundColor: "#a8d0ff" },

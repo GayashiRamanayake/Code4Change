@@ -313,10 +313,12 @@ const styles = StyleSheet.create({
   imageButton: { 
     alignItems: "center", 
     justifyContent: "center",
+    
   },
   buttonImage: {
     width: 155,
-    height: 100 
+    height: 100,
+    
   },
   categoryRow: { flexDirection: "row", marginBottom: 16, alignItems: "center", flexWrap: "wrap" },
   categoryButton: { paddingHorizontal: 14, paddingVertical: 6, backgroundColor: "#A9CCE3", borderRadius: 20, marginRight: 8, marginBottom: 8 },
