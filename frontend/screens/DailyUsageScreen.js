@@ -142,7 +142,7 @@ export default function DailyUsageScreen() {
       </View>
 
       <Image 
-        source={require('../../assets/images/TwoCats.png')} 
+        source={require('../../assets/images/cat.png')} 
         style={styles.headerImage}
         resizeMode="contain"
       />
