@@ -55,84 +55,46 @@ export default function InventoryScreen() {
     if (filterFromDashboard) setSelectedCategory("All");
   }, [filterFromDashboard]);
 
-  /*const handleSaveItem = async (item) => {
-  try {
-    const today = new Date().toISOString().split("T")[0];
-
-    if (item.id) {
-      // Existing item — fetch current data first
-      const res = await axios.get(`${API_URL}/inventory/${item.id}.json`);
-      const currentItem = res.data;
-
-      const updatedItem = {
-        ...currentItem,
-        ...item,
-        updatedAt: today,
-        history: currentItem.history ? [...currentItem.history, { date: today, stock: item.stock }] : [{ date: today, stock: item.stock }]
-      };
-
-      await axios.put(`${API_URL}/inventory/${item.id}.json`, updatedItem);
-    } else {
-      // New item — add initial history
-      const newItem = {
-        ...item,
-        updatedAt: today,
-        history: [{ date: today, stock: item.stock }]
-      };
-      await axios.post(`${API_URL}/inventory.json`, newItem);
-    }
-
-    fetchInventory();
-    setAddModalVisible(false);
-    setEditModalVisible(false);
-    setItemToEdit(null);
-  } catch (err) {
-    console.log("Error saving item:", err.message);
-  }
-};*/
-
   const handleSaveItem = async (item) => {
-  try {
-    const today = new Date().toISOString().split("T")[0];
+    try {
+      const today = new Date().toISOString().split("T")[0];
 
-    if (item.id) {
-      // Existing item — fetch current data first
-      const res = await axios.get(`${API_URL}/inventory/${item.id}.json`);
-      const currentItem = res.data;
+      if (item.id) {
+        // Existing item — fetch current data first
+        const res = await axios.get(`${API_URL}/inventory/${item.id}.json`);
+        const currentItem = res.data;
 
-      const stockBefore = currentItem.stock; // stock at start of day
-      const stockUsed = stockBefore - item.stock; // calculate usage
+        const stockBefore = currentItem.stock; // stock at start of day
+        const stockUsed = stockBefore - item.stock; // calculate usage
 
-      const updatedItem = {
-        ...currentItem,
-        ...item,
-        updatedAt: today,
-        history: currentItem.history
-          ? [...currentItem.history, { date: today, stockBefore, stockUsed, stock: item.stock }]
-          : [{ date: today, stockBefore, stockUsed, stock: item.stock }]
-      };
+        const updatedItem = {
+          ...currentItem,
+          ...item,
+          updatedAt: today,
+          history: currentItem.history
+            ? [...currentItem.history, { date: today, stockBefore, stockUsed, stock: item.stock }]
+            : [{ date: today, stockBefore, stockUsed, stock: item.stock }]
+        };
 
-      await axios.put(`${API_URL}/inventory/${item.id}.json`, updatedItem);
-    } else {
-      // New item — first history entry
-      const newItem = {
-        ...item,
-        updatedAt: today,
-        history: [{ date: today, stockBefore: 0, stockUsed: 0, stock: item.stock }]
-      };
-      await axios.post(`${API_URL}/inventory.json`, newItem);
+        await axios.put(`${API_URL}/inventory/${item.id}.json`, updatedItem);
+      } else {
+        // New item — first history entry
+        const newItem = {
+          ...item,
+          updatedAt: today,
+          history: [{ date: today, stockBefore: 0, stockUsed: 0, stock: item.stock }]
+        };
+        await axios.post(`${API_URL}/inventory.json`, newItem);
+      }
+
+      fetchInventory();
+      setAddModalVisible(false);
+      setEditModalVisible(false);
+      setItemToEdit(null);
+    } catch (err) {
+      console.log("Error saving item:", err.message);
     }
-
-    fetchInventory();
-    setAddModalVisible(false);
-    setEditModalVisible(false);
-    setItemToEdit(null);
-  } catch (err) {
-    console.log("Error saving item:", err.message);
-  }
-};
-
-
+  };
 
   const handleDeleteItem = async (id) => {
     Alert.alert("Confirm Delete", "Are you sure you want to delete this item?", [
@@ -169,35 +131,9 @@ export default function InventoryScreen() {
   const lowStockCount = inventoryList.filter(item => item.stock > 0 && item.stock <= (item.threshold || 5)).length;
   const outOfStockCount = inventoryList.filter(item => item.stock === 0).length;
 
-  const renderItem = ({ item }) => (
-    <View style={styles.itemCard}>
-      <View style={{ flex: 1 }}>
-        <Text style={styles.itemName}>{item.name}</Text>
-        <Text style={styles.itemCategory}>{item.category}</Text>
-        <View style={styles.row}>
-          <Text style={styles.itemQuantity}>{item.stock}</Text>
-          <View
-            style={[
-              styles.statusDot,
-              { backgroundColor: item.stock <= item.threshold ? "#D32F2F" : "#4CAF50" },
-            ]}
-          />
-          <Text style={styles.statusText}>{item.stock <= item.threshold ? "LOW" : "GOOD"}</Text>
-        </View>
-      </View>
-      <TouchableOpacity
-        onPress={() => {
-          setItemToEdit(item);
-          setEditModalVisible(true);
-        }}
-      >
-        <MaterialCommunityIcons name="note-edit-outline" size={22} color="#64B5F6" />
-      </TouchableOpacity>
-    </View>
-  );
-
-  return (
-    <View style={styles.container}>
+  // Header component that includes all the top content
+  const renderListHeader = () => (
+    <View>
       <View style={styles.headerBar}>
         <Text style={styles.headerTitle}>Inventory Management</Text>
         <Text style={styles.headerSubtitle}>Stay updated on stock availability</Text>
@@ -218,7 +154,6 @@ export default function InventoryScreen() {
         </View>
       </View>
 
-      
       <View style={styles.headerButtons}>
         <TouchableOpacity
           style={styles.imageButton}
@@ -258,11 +193,43 @@ export default function InventoryScreen() {
           </TouchableOpacity>
         </View>
       )}
+    </View>
+  );
 
+  const renderItem = ({ item }) => (
+    <View style={styles.itemCard}>
+      <View style={{ flex: 1 }}>
+        <Text style={styles.itemName}>{item.name}</Text>
+        <Text style={styles.itemCategory}>{item.category}</Text>
+        <View style={styles.row}>
+          <Text style={styles.itemQuantity}>{item.stock}</Text>
+          <View
+            style={[
+              styles.statusDot,
+              { backgroundColor: item.stock <= item.threshold ? "#D32F2F" : "#4CAF50" },
+            ]}
+          />
+          <Text style={styles.statusText}>{item.stock <= item.threshold ? "LOW" : "GOOD"}</Text>
+        </View>
+      </View>
+      <TouchableOpacity
+        onPress={() => {
+          setItemToEdit(item);
+          setEditModalVisible(true);
+        }}
+      >
+        <MaterialCommunityIcons name="note-edit-outline" size={22} color="#64B5F6" />
+      </TouchableOpacity>
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
       <FlatList
         data={filteredData}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
+        ListHeaderComponent={renderListHeader}
         contentContainerStyle={{ paddingBottom: 20 }}
       />
 
