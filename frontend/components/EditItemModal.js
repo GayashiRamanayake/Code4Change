@@ -55,9 +55,9 @@ export default function EditItemModal({ visible, onClose, item, onSave, onDelete
 
 const styles = StyleSheet.create({
   modalContainer:{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:"#00000099"},
-  modalContent:{width:"90%",backgroundColor:"#0D1117",padding:20,borderRadius:12},
-  title:{fontSize:18,fontWeight:"bold",marginBottom:12,color:"#EAEAEA"},
-  input:{borderWidth:1,borderColor:"#222",borderRadius:6,padding:10,marginVertical:6,color:"#EAEAEA",backgroundColor:"#1A1F29"},
+  modalContent:{width:"90%",backgroundColor:"#ffffffff",padding:20,borderRadius:12},
+  title:{fontSize:18,fontWeight:"bold",marginBottom:12,color:"#000000ff"},
+  input:{borderWidth:1,borderColor:"#222",borderRadius:6,padding:10,marginVertical:6,color:"#a6a6a6ff",backgroundColor:"#cfcfcfff"},
   button:{backgroundColor:"#2196F3",padding:12,borderRadius:6,marginTop:10,alignItems:"center"},
   delete:{backgroundColor:"#D32F2F"},
   cancel:{backgroundColor:"#555"},
